@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { content } from "@/config/content";
 
 interface ProjectsProps {
@@ -10,6 +11,7 @@ interface ProjectsProps {
   p1Name?: string;
   p1Description?: string;
   p1Tech?: string[];
+  p1ImageUrl?: string;
   p2Tag?: string;
   p2Name?: string;
   p2Description?: string;
@@ -22,6 +24,7 @@ export default function Projects({
   p1Name = "",
   p1Description = "",
   p1Tech = [],
+  p1ImageUrl = "",
   p2Tag = "R&D STAGE",
   p2Name = "[UNANNOUNCED]",
   p2Description = "Next-generation integrated hardware & frontend systems prototype currently in internal development.",
@@ -32,6 +35,7 @@ export default function Projects({
   const project1Name        = p1Name        || content.coreProject.name;
   const project1Description = p1Description || content.coreProject.description;
   const project1Tech        = p1Tech.length  > 0 ? p1Tech : content.coreProject.tech;
+  const project1ImageUrl    = p1ImageUrl    || "";
 
   return (
     <section id="projects" className="relative w-full bg-neocream py-32 px-6 scroll-mt-[100px]">
@@ -80,18 +84,31 @@ export default function Projects({
               <div className="relative flex min-h-[300px] lg:min-h-full items-center justify-center border-t-4 border-neoblack lg:border-t-0 lg:border-l-4 lg:w-1/2 bg-neogreen p-8 overflow-hidden z-0">
                 <div className="absolute top-8 right-8 h-12 w-12 rounded-full border-neo-black bg-neoyellow shadow-[4px_4px_0px_0px_#000]"></div>
                 <div className="absolute bottom-8 left-8 h-16 w-16 border-neo-black bg-neoblue shadow-[4px_4px_0px_0px_#000] rotate-12"></div>
-                <div className="w-[80%] rounded-2xl border-neo-black bg-white p-6 shadow-neo-black z-10 hover:-translate-y-2 transition-transform duration-200">
-                  <div className="mb-4 flex gap-2 border-b-4 border-neoblack pb-4">
-                    <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neopink"></div>
-                    <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neoyellow"></div>
-                    <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neoblue"></div>
+                {project1ImageUrl ? (
+                  <div className="w-[80%] rounded-2xl border-neo-black bg-white shadow-neo-black z-10 overflow-hidden hover:-translate-y-2 transition-transform duration-200 aspect-video relative">
+                    <Image
+                      src={project1ImageUrl}
+                      alt={project1Name}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      priority
+                    />
                   </div>
-                  <div className="font-mono text-sm font-bold leading-relaxed text-neoblack">
-                    &gt; REACT COMPILER: ACTIVE<br/>
-                    &gt; FIRESTORE CONN: OK<br/>
-                    &gt; ECO-ENGINE: RUNNING
+                ) : (
+                  <div className="w-[80%] rounded-2xl border-neo-black bg-white p-6 shadow-neo-black z-10 hover:-translate-y-2 transition-transform duration-200">
+                    <div className="mb-4 flex gap-2 border-b-4 border-neoblack pb-4">
+                      <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neopink"></div>
+                      <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neoyellow"></div>
+                      <div className="h-4 w-4 rounded-full border-2 border-neoblack bg-neoblue"></div>
+                    </div>
+                    <div className="font-mono text-sm font-bold leading-relaxed text-neoblack">
+                      &gt; REACT COMPILER: ACTIVE<br/>
+                      &gt; FIRESTORE CONN: OK<br/>
+                      &gt; ECO-ENGINE: RUNNING
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

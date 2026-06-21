@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { content } from "@/config/content";
 import { Camera, Clapperboard, MonitorPlay } from "lucide-react";
 
-interface MediaOverride { title: string; desc: string; tags: string; }
+interface MediaOverride { title: string; desc: string; tags: string; imageUrl?: string; }
 
 interface MediaProductionProps {
   heading?: string;
@@ -22,15 +23,15 @@ export default function MediaProduction({
   const rotations = ["-rotate-2", "rotate-3", "-rotate-1"];
   const badgeColors = ["bg-neopink", "bg-neoyellow", "bg-neoblue"];
 
-  // Merge Notion overrides with content.ts defaults per slot
   const cards = content.mediaFocus.map((defaultItem, i) => {
     const override = mediaOverrides[i];
     return {
       icon: icons[i],
       rotation: rotations[i],
       badgeColor: badgeColors[i],
-      title: (override?.title) || defaultItem.title,
-      description: (override?.desc) || defaultItem.description,
+      title:       override?.title    || defaultItem.title,
+      description: override?.desc     || defaultItem.description,
+      imageUrl:    override?.imageUrl || "",
       tags: override?.tags
         ? override.tags.split(",").map(t => t.trim()).filter(Boolean)
         : defaultItem.tags,
@@ -56,12 +57,25 @@ export default function MediaProduction({
                 key={idx}
                 className={`w-full max-w-sm rounded-2xl border-neo-black bg-white p-6 shadow-neo-black cursor-pointer active-neo-press z-20 md:hover:scale-105 transition-transform duration-200 ${card.rotation}`}
               >
+                {/* Photo area — shows real image if URL is provided, icon placeholder otherwise */}
                 <div className="aspect-[4/5] w-full rounded-xl border-4 border-neoblack bg-neocream flex flex-col items-center justify-center relative overflow-hidden mb-6">
-                  <Icon className="h-16 w-16 text-neoblack/20" strokeWidth={2} />
-                  <span className="font-mono text-xs font-bold text-neoblack mt-4 uppercase opacity-50">
-                    [RENDER PREVIEW]
-                  </span>
-                  <div className={`absolute top-4 right-4 ${card.badgeColor} border-2 border-neoblack rounded-full px-3 py-1 font-mono text-xs font-black text-neoblack uppercase shadow-[2px_2px_0px_0px_#000]`}>
+                  {card.imageUrl ? (
+                    <Image
+                      src={card.imageUrl}
+                      alt={card.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 384px"
+                    />
+                  ) : (
+                    <>
+                      <Icon className="h-16 w-16 text-neoblack/20" strokeWidth={2} />
+                      <span className="font-mono text-xs font-bold text-neoblack mt-4 uppercase opacity-50">
+                        [ADD PHOTO URL IN NOTION]
+                      </span>
+                    </>
+                  )}
+                  <div className={`absolute top-4 right-4 ${card.badgeColor} border-2 border-neoblack rounded-full px-3 py-1 font-mono text-xs font-black text-neoblack uppercase shadow-[2px_2px_0px_0px_#000] z-10`}>
                     HQ
                   </div>
                 </div>

@@ -41,6 +41,7 @@ export default async function Home() {
   const p1Name             = cms["Project 1 Name"]            || "";
   const p1Description      = cms["Project 1 Description"]     || "";
   const p1Tech             = cms["Project 1 Tech Stack"]      || "";
+  const p1ImageUrl         = cms["Project 1 Screenshot URL"]  || "";
   const p2Tag              = cms["Project 2 Tag"]             || "R&D STAGE";
   const p2Name             = cms["Project 2 Name"]            || "[UNANNOUNCED]";
   const p2Description      = cms["Project 2 Description"]     || "Next-generation integrated hardware & frontend systems prototype currently in internal development.";
@@ -66,15 +67,18 @@ export default async function Home() {
   // ─── MEDIA PRODUCTION ────────────────────────────────────────────────────────
   const mediaHeading    = cms["Media Section Title"]    || "VISUALS &";
   const mediaSubheading = cms["Media Section Subtitle"] || "MOTION.";
-  const media1Title = cms["Media Card 1 Title"]       || "";
-  const media1Desc  = cms["Media Card 1 Description"] || "";
-  const media1Tags  = cms["Media Card 1 Tags"]        || "";
-  const media2Title = cms["Media Card 2 Title"]       || "";
-  const media2Desc  = cms["Media Card 2 Description"] || "";
-  const media2Tags  = cms["Media Card 2 Tags"]        || "";
-  const media3Title = cms["Media Card 3 Title"]       || "";
-  const media3Desc  = cms["Media Card 3 Description"] || "";
-  const media3Tags  = cms["Media Card 3 Tags"]        || "";
+  const media1Title    = cms["Media Card 1 Title"]       || "";
+  const media1Desc     = cms["Media Card 1 Description"] || "";
+  const media1Tags     = cms["Media Card 1 Tags"]        || "";
+  const media1ImageUrl = cms["Media Card 1 Photo URL"]   || "";
+  const media2Title    = cms["Media Card 2 Title"]       || "";
+  const media2Desc     = cms["Media Card 2 Description"] || "";
+  const media2Tags     = cms["Media Card 2 Tags"]        || "";
+  const media2ImageUrl = cms["Media Card 2 Photo URL"]   || "";
+  const media3Title    = cms["Media Card 3 Title"]       || "";
+  const media3Desc     = cms["Media Card 3 Description"] || "";
+  const media3Tags     = cms["Media Card 3 Tags"]        || "";
+  const media3ImageUrl = cms["Media Card 3 Photo URL"]   || "";
 
   // ─── EXPERIENCE / TIMELINE ───────────────────────────────────────────────────
   const expHeading    = cms["Timeline Section Title"]    || "MY";
@@ -142,6 +146,7 @@ export default async function Home() {
           p1Name={p1Name}
           p1Description={p1Description}
           p1Tech={p1Tech ? p1Tech.split(",").map(s => s.trim()).filter(Boolean) : []}
+          p1ImageUrl={p1ImageUrl}
           p2Tag={p2Tag}
           p2Name={p2Name}
           p2Description={p2Description}
@@ -167,9 +172,9 @@ export default async function Home() {
           heading={mediaHeading}
           subheading={mediaSubheading}
           mediaOverrides={[
-            { title: media1Title, desc: media1Desc, tags: media1Tags },
-            { title: media2Title, desc: media2Desc, tags: media2Tags },
-            { title: media3Title, desc: media3Desc, tags: media3Tags },
+            { title: media1Title, desc: media1Desc, tags: media1Tags, imageUrl: media1ImageUrl },
+            { title: media2Title, desc: media2Desc, tags: media2Tags, imageUrl: media2ImageUrl },
+            { title: media3Title, desc: media3Desc, tags: media3Tags, imageUrl: media3ImageUrl },
           ]}
         />
 
