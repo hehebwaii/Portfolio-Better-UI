@@ -18,109 +18,109 @@ export default async function Home() {
   const cms = await fetchPortfolioContent();
 
   // ─── NAVBAR ─────────────────────────────────────────────────────────────────
-  const navBrand    = cms["navBrand"]    || "niranjan.digital";
-  const navContact  = cms["navContact"]  || "SAY HELLO";
+  const navBrand       = cms["Navbar Brand Name"]      || "niranjan.digital";
+  const navContact     = cms["Navbar Contact Button"]  || "SAY HELLO";
 
   // ─── HERO ───────────────────────────────────────────────────────────────────
-  const heroHeadline = cms["heroHeadline"] || "BUILDING BOLD HARDWARE & WEB ARCHITECTURES";
-  const heroSubtext  = cms["heroSubtext"]  || "Bridging embedded systems logic with scalable full-stack platforms.";
-  const heroCTA      = cms["heroCTA"]      || "EXPLORE WORK";
+  const heroHeadline   = cms["Hero Headline"]          || "BUILDING BOLD HARDWARE & WEB ARCHITECTURES";
+  const heroSubtext    = cms["Hero Subtext"]           || "Bridging embedded systems logic with scalable full-stack platforms.";
+  const heroCTA        = cms["Hero Button Text"]       || "EXPLORE WORK";
 
   // ─── SKILLS ─────────────────────────────────────────────────────────────────
-  const skillsHeading = cms["skillsHeading"] || "WHAT I CAN DO";
-  const skillsSubheading = cms["skillsSubheading"] || "FOR YOU.";
-  const skill1 = cms["skill1"] || "";
-  const skill2 = cms["skill2"] || "";
-  const skill3 = cms["skill3"] || "";
-  const skill4 = cms["skill4"] || "";
+  const skillsHeading    = cms["Skills Section Title"]    || "WHAT I CAN DO";
+  const skillsSubheading = cms["Skills Section Subtitle"] || "FOR YOU.";
+  const skill1           = cms["Skill 1"]                 || "";
+  const skill2           = cms["Skill 2"]                 || "";
+  const skill3           = cms["Skill 3"]                 || "";
+  const skill4           = cms["Skill 4"]                 || "";
 
   // ─── PROJECTS ───────────────────────────────────────────────────────────────
-  const projectsHeading    = cms["projectsHeading"]    || "SELECTED";
-  const projectsSubheading = cms["projectsSubheading"] || "WORKS.";
-  const p1Event       = cms["p1Event"]       || "";
-  const p1Name        = cms["p1Name"]        || "";
-  const p1Description = cms["p1Description"] || "";
-  const p1Tech        = cms["p1Tech"]        || ""; // comma-separated
-  const p2Tag         = cms["p2Tag"]         || "R&D STAGE";
-  const p2Name        = cms["p2Name"]        || "[UNANNOUNCED]";
-  const p2Description = cms["p2Description"] || "Next-generation integrated hardware & frontend systems prototype currently in internal development.";
+  const projectsHeading    = cms["Projects Section Title"]    || "SELECTED";
+  const projectsSubheading = cms["Projects Section Subtitle"] || "WORKS.";
+  const p1Event            = cms["Project 1 Event Tag"]       || "";
+  const p1Name             = cms["Project 1 Name"]            || "";
+  const p1Description      = cms["Project 1 Description"]     || "";
+  const p1Tech             = cms["Project 1 Tech Stack"]      || "";
+  const p2Tag              = cms["Project 2 Tag"]             || "R&D STAGE";
+  const p2Name             = cms["Project 2 Name"]            || "[UNANNOUNCED]";
+  const p2Description      = cms["Project 2 Description"]     || "Next-generation integrated hardware & frontend systems prototype currently in internal development.";
 
   // ─── RECRUITER TERMINAL ──────────────────────────────────────────────────────
-  const metricsHardware = cms["metricsHardware"] || "Logic Gates Built: XX";
-  const metricsSoftware = cms["metricsSoftware"] || "Components Rendered: XX";
-  const roi1Label = cms["roi1Label"] || "";
-  const roi1Value = cms["roi1Value"] || "";
-  const roi2Label = cms["roi2Label"] || "";
-  const roi2Value = cms["roi2Value"] || "";
-  const roi3Label = cms["roi3Label"] || "";
-  const roi3Value = cms["roi3Value"] || "";
-  const km1Label  = cms["km1Label"]  || "";
-  const km1Value  = cms["km1Value"]  || "";
-  const km2Label  = cms["km2Label"]  || "";
-  const km2Value  = cms["km2Value"]  || "";
-  const km3Label  = cms["km3Label"]  || "";
-  const km3Value  = cms["km3Value"]  || "";
-  const km4Label  = cms["km4Label"]  || "";
-  const km4Value  = cms["km4Value"]  || "";
+  const metricsHardware = cms["Terminal Hardware Metric"] || "Logic Gates Built: XX";
+  const metricsSoftware = cms["Terminal Software Metric"] || "Components Rendered: XX";
+  const km1Label = cms["Key Metric 1 Label"] || "";
+  const km1Value = cms["Key Metric 1 Value"] || "";
+  const km2Label = cms["Key Metric 2 Label"] || "";
+  const km2Value = cms["Key Metric 2 Value"] || "";
+  const km3Label = cms["Key Metric 3 Label"] || "";
+  const km3Value = cms["Key Metric 3 Value"] || "";
+  const km4Label = cms["Key Metric 4 Label"] || "";
+  const km4Value = cms["Key Metric 4 Value"] || "";
+  const roi1Label = cms["ROI 1 Label"] || "";
+  const roi1Value = cms["ROI 1 Value"] || "";
+  const roi2Label = cms["ROI 2 Label"] || "";
+  const roi2Value = cms["ROI 2 Value"] || "";
+  const roi3Label = cms["ROI 3 Label"] || "";
+  const roi3Value = cms["ROI 3 Value"] || "";
 
   // ─── MEDIA PRODUCTION ────────────────────────────────────────────────────────
-  const mediaHeading    = cms["mediaHeading"]    || "VISUALS &";
-  const mediaSubheading = cms["mediaSubheading"] || "MOTION.";
-  const media1Title = cms["media1Title"] || "";
-  const media1Desc  = cms["media1Desc"]  || "";
-  const media1Tags  = cms["media1Tags"]  || ""; // comma-separated
-  const media2Title = cms["media2Title"] || "";
-  const media2Desc  = cms["media2Desc"]  || "";
-  const media2Tags  = cms["media2Tags"]  || "";
-  const media3Title = cms["media3Title"] || "";
-  const media3Desc  = cms["media3Desc"]  || "";
-  const media3Tags  = cms["media3Tags"]  || "";
+  const mediaHeading    = cms["Media Section Title"]    || "VISUALS &";
+  const mediaSubheading = cms["Media Section Subtitle"] || "MOTION.";
+  const media1Title = cms["Media Card 1 Title"]       || "";
+  const media1Desc  = cms["Media Card 1 Description"] || "";
+  const media1Tags  = cms["Media Card 1 Tags"]        || "";
+  const media2Title = cms["Media Card 2 Title"]       || "";
+  const media2Desc  = cms["Media Card 2 Description"] || "";
+  const media2Tags  = cms["Media Card 2 Tags"]        || "";
+  const media3Title = cms["Media Card 3 Title"]       || "";
+  const media3Desc  = cms["Media Card 3 Description"] || "";
+  const media3Tags  = cms["Media Card 3 Tags"]        || "";
 
   // ─── EXPERIENCE / TIMELINE ───────────────────────────────────────────────────
-  const expHeading    = cms["expHeading"]    || "MY";
-  const expSubheading = cms["expSubheading"] || "TIMELINE.";
-  const ms1Title  = cms["ms1Title"]  || "";
-  const ms1Org    = cms["ms1Org"]    || "";
-  const ms1Period = cms["ms1Period"] || "";
-  const ms1Desc   = cms["ms1Desc"]   || "";
-  const ms2Title  = cms["ms2Title"]  || "";
-  const ms2Org    = cms["ms2Org"]    || "";
-  const ms2Period = cms["ms2Period"] || "";
-  const ms2Desc   = cms["ms2Desc"]   || "";
-  const ms3Title  = cms["ms3Title"]  || "";
-  const ms3Org    = cms["ms3Org"]    || "";
-  const ms3Period = cms["ms3Period"] || "";
-  const ms3Desc   = cms["ms3Desc"]   || "";
+  const expHeading    = cms["Timeline Section Title"]    || "MY";
+  const expSubheading = cms["Timeline Section Subtitle"] || "TIMELINE.";
+  const ms1Title  = cms["Timeline 1 Title"]        || "";
+  const ms1Org    = cms["Timeline 1 Organization"] || "";
+  const ms1Period = cms["Timeline 1 Period"]        || "";
+  const ms1Desc   = cms["Timeline 1 Description"]  || "";
+  const ms2Title  = cms["Timeline 2 Title"]        || "";
+  const ms2Org    = cms["Timeline 2 Organization"] || "";
+  const ms2Period = cms["Timeline 2 Period"]        || "";
+  const ms2Desc   = cms["Timeline 2 Description"]  || "";
+  const ms3Title  = cms["Timeline 3 Title"]        || "";
+  const ms3Org    = cms["Timeline 3 Organization"] || "";
+  const ms3Period = cms["Timeline 3 Period"]        || "";
+  const ms3Desc   = cms["Timeline 3 Description"]  || "";
 
   // ─── DEPRECATED ARCHIVES ─────────────────────────────────────────────────────
-  const archHeading    = cms["archHeading"]    || "DEPRECATED";
-  const archSubheading = cms["archSubheading"] || "ARCHITECTURES.";
-  const arch1Version = cms["arch1Version"] || "";
-  const arch1Error   = cms["arch1Error"]   || "";
-  const arch1Desc    = cms["arch1Desc"]    || "";
+  const archHeading    = cms["Archives Section Title"]    || "DEPRECATED";
+  const archSubheading = cms["Archives Section Subtitle"] || "ARCHITECTURES.";
+  const arch1Version   = cms["Archive 1 Version"]        || "";
+  const arch1Error     = cms["Archive 1 Error Message"]  || "";
+  const arch1Desc      = cms["Archive 1 Description"]    || "";
 
   // ─── TESTIMONIALS ────────────────────────────────────────────────────────────
-  const testHeading    = cms["testHeading"]    || "THE";
-  const testSubheading = cms["testSubheading"] || "VAULT.";
-  const testSubtext    = cms["testSubtext"]    || "ACCESS ENCRYPTED TESTIMONIALS";
-  const t1Name = cms["t1Name"] || "";
-  const t1Role = cms["t1Role"] || "";
-  const t1Text = cms["t1Text"] || "";
-  const t2Name = cms["t2Name"] || "";
-  const t2Role = cms["t2Role"] || "";
-  const t2Text = cms["t2Text"] || "";
-  const t3Name = cms["t3Name"] || "";
-  const t3Role = cms["t3Role"] || "";
-  const t3Text = cms["t3Text"] || "";
+  const testHeading    = cms["Testimonials Section Title"]    || "THE";
+  const testSubheading = cms["Testimonials Section Subtitle"] || "VAULT.";
+  const testSubtext    = cms["Testimonials Subtext"]          || "ACCESS ENCRYPTED TESTIMONIALS";
+  const t1Name = cms["Testimonial 1 Name"]  || "";
+  const t1Role = cms["Testimonial 1 Role"]  || "";
+  const t1Text = cms["Testimonial 1 Quote"] || "";
+  const t2Name = cms["Testimonial 2 Name"]  || "";
+  const t2Role = cms["Testimonial 2 Role"]  || "";
+  const t2Text = cms["Testimonial 2 Quote"] || "";
+  const t3Name = cms["Testimonial 3 Name"]  || "";
+  const t3Role = cms["Testimonial 3 Role"]  || "";
+  const t3Text = cms["Testimonial 3 Quote"] || "";
 
   // ─── CONTACT ─────────────────────────────────────────────────────────────────
-  const contactHeading = cms["contactHeading"] || "SAY HELLO.";
-  const contactCTA     = cms["contactCTA"]     || "TRANSMIT PAYLOAD";
+  const contactHeading = cms["Contact Section Title"]  || "SAY HELLO.";
+  const contactCTA     = cms["Contact Submit Button"]  || "TRANSMIT PAYLOAD";
 
   // ─── FOOTER ──────────────────────────────────────────────────────────────────
-  const footerName    = cms["footerName"]    || "NIRANJAN S S";
-  const footerMarquee = cms["footerMarquee"] || "BUILDING BOLD ARCHITECTURES •";
-  const footerSysVer  = cms["footerSysVer"]  || "SYS.VER: 14.0 // NEO-BRUTALIST POP";
+  const footerName    = cms["Footer Name"]           || "NIRANJAN S S";
+  const footerMarquee = cms["Footer Scrolling Text"] || "BUILDING BOLD ARCHITECTURES •";
+  const footerSysVer  = cms["Footer Version Tag"]    || "SYS.VER: 14.0 // NEO-BRUTALIST POP";
 
   return (
     <main className="relative w-full max-w-[100vw] min-h-screen bg-neocream overflow-x-clip">
