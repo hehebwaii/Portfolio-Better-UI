@@ -10,8 +10,8 @@ export async function fetchPortfolioContent(): Promise<Record<string, string>> {
   }
 
   try {
-    const response = await notion.databases.query({
-      database_id: databaseId,
+    const response = await notion.dataSources.query({
+      data_source_id: databaseId,
     });
 
     const contentMap: Record<string, string> = {};
