@@ -10,20 +10,43 @@ export async function fetchPortfolioContent(): Promise<Record<string, string>> {
   }
 
   try {
-    const response = await notion.dataSources.query({
-      data_source_id: databaseId,
+    // Use the search API to retrieve pages within the database.
+    // This is compatible with the Notion SDK v5 for standard in-app databases.
+    const response = await notion.search({
+      filter: {
+        value: 'page',
+        property: 'object',
+      },
     });
 
     const contentMap: Record<string, string> = {};
 
-    response.results.forEach((page: any) => {
-      const keyProperty = page.properties.Key;
-      const valueProperty = page.properties.Value;
-
-      if (keyProperty?.title?.[0]?.plain_text && valueProperty?.rich_text?.[0]?.plain_text) {
-        contentMap[keyProperty.title[0].plain_text] = valueProperty.rich_text[0].plain_text;
+    for (const result of response.results) {
+      // Only process pages that belong to our target database
+      if (
+        result.object !== 'page' ||
+        !('parent' in result) ||
+        (result as any).parent?.database_id?.replace(/-/g, '') !== databaseId.replace(/-/g, '')
+      ) {
+        continue;
       }
-    });
+
+      const page = result as any;
+      const keyProp = page.properties?.Key;
+      const valueProp = page.properties?.Value;
+
+      const key =
+        keyProp?.title?.[0]?.plain_text ||
+        keyProp?.rich_text?.[0]?.plain_text;
+
+      const value =
+        valueProp?.rich_text?.[0]?.plain_text ||
+        valueProp?.title?.[0]?.plain_text;
+
+      if (key && value) {
+        contentMap[key] = value;
+      }
+    }
 
     return contentMap;
   } catch (error) {
