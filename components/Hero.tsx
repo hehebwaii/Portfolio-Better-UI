@@ -6,9 +6,10 @@ import HeroCanvasWrapper from "./HeroCanvasWrapper";
 interface HeroProps {
   headline: string;
   subtext: string;
+  cta: string;
 }
 
-export default function Hero({ headline, subtext }: HeroProps) {
+export default function Hero({ headline, subtext, cta }: HeroProps) {
   return (
     <section 
       id="hero" 
@@ -30,7 +31,7 @@ export default function Hero({ headline, subtext }: HeroProps) {
             href="#projects" 
             className="relative z-20 inline-block border-neo-black bg-neoyellow px-8 py-4 rounded-2xl font-display text-2xl font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
           >
-            EXPLORE WORK
+            {cta}
           </a>
         </div>
 

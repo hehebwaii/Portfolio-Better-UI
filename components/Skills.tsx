@@ -4,7 +4,14 @@ import React from "react";
 import { content } from "@/config/content";
 import { Cpu, Code, Camera, Video } from "lucide-react";
 
-export default function Skills() {
+interface SkillsProps {
+  skillOverrides?: string[];
+}
+
+export default function Skills({ skillOverrides = [] }: SkillsProps) {
+  const baseSpecialties = content.specialties;
+  // Merge: Notion overrides take priority, fill remaining slots from content.ts
+  const specialties = baseSpecialties.map((s, i) => skillOverrides[i] || s);
   const badgeColors = ["bg-neoblue", "bg-neopink", "bg-neoyellow", "bg-neogreen"];
   const Icons = [Cpu, Code, Camera, Video];
 
@@ -20,7 +27,7 @@ export default function Skills() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {content.specialties.map((specialty, index) => {
+          {specialties.map((specialty, index) => {
             const Icon = Icons[index % Icons.length];
             const badgeColor = badgeColors[index % badgeColors.length];
 

@@ -10,7 +10,7 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
-function VelocityMarquee({ baseVelocity = -5 }) {
+function VelocityMarquee({ baseVelocity = -5, text = "BUILDING BOLD ARCHITECTURES •" }: { baseVelocity?: number; text?: string }) {
   const baseX = useMotionValue(0);
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
@@ -43,7 +43,7 @@ function VelocityMarquee({ baseVelocity = -5 }) {
       <motion.div className="flex whitespace-nowrap" style={{ x }}>
         {[...Array(10)].map((_, i) => (
           <span key={i} className="mx-4 font-display text-2xl font-black uppercase text-neoblack block">
-            BUILDING BOLD ARCHITECTURES • 
+            {text}
           </span>
         ))}
       </motion.div>
@@ -51,7 +51,13 @@ function VelocityMarquee({ baseVelocity = -5 }) {
   );
 }
 
-export default function Footer() {
+interface FooterProps {
+  name: string;
+  marqueeText: string;
+  sysVer: string;
+}
+
+export default function Footer({ name, marqueeText, sysVer }: FooterProps) {
   const currentYear = new Date().getFullYear();
   const [modalOpen, setModalOpen] = useState(false);
   const { escPressed, resetEsc } = useEsc();
@@ -67,15 +73,15 @@ export default function Footer() {
     <>
       <footer className="w-full bg-neoblue border-t-4 border-neoblack relative z-10 mt-auto flex flex-col">
         {/* Velocity-Mapped Marquee */}
-        <VelocityMarquee baseVelocity={-5} />
+        <VelocityMarquee baseVelocity={-5} text={marqueeText} />
 
         <div className="mx-auto w-full max-w-7xl px-6 py-16 flex flex-col md:flex-row items-center justify-between gap-8 relative z-20">
           <div className="text-center md:text-left">
             <p className="font-display text-4xl font-black uppercase text-neoblack tracking-tighter bg-white inline-block px-4 py-2 border-neo-black shadow-[4px_4px_0px_0px_#000] rounded-xl -rotate-2">
-              NIRANJAN S S
+              {name}
             </p>
             <p className="font-mono text-sm font-bold text-neoblack mt-6 uppercase">
-              SYS.VER: 13.2 // NEO-BRUTALIST POP
+              {sysVer}
             </p>
           </div>
 
@@ -88,7 +94,7 @@ export default function Footer() {
             </button>
             
             <p className="font-mono text-xs font-bold text-neoblack uppercase">
-              &copy; {currentYear} NIRANJAN S S. ALL RIGHTS RESERVED.
+              &copy; {currentYear} {name}. ALL RIGHTS RESERVED.
             </p>
           </div>
         </div>

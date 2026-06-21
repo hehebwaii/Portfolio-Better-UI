@@ -2,7 +2,12 @@
 
 import React, { useState } from "react";
 
-export default function Contact() {
+interface ContactProps {
+  heading: string;
+  cta: string;
+}
+
+export default function Contact({ heading, cta }: ContactProps) {
   const [focusState, setFocusState] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -21,7 +26,7 @@ export default function Contact() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-16 text-center">
           <h2 className="font-display text-[clamp(4rem,10vw,8rem)] font-black uppercase tracking-tighter leading-none text-neoblack">
-            SAY HELLO.
+            {heading}
           </h2>
         </div>
 
@@ -80,7 +85,7 @@ export default function Contact() {
               type="submit" 
               className="mt-6 border-neo-black bg-neoyellow p-6 rounded-2xl font-display text-2xl font-black uppercase text-neoblack shadow-neo-black active-neo-press z-20 w-full relative cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
             >
-              TRANSMIT PAYLOAD
+              {cta}
             </button>
           </form>
           
