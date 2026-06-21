@@ -2,22 +2,26 @@
 
 import React, { useEffect, useState } from "react";
 
-export default function Navbar() {
+interface NavbarProps {
+  brand: string;
+  contactLabel: string;
+}
+
+export default function Navbar({ brand, contactLabel }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { name: "SKILLS", href: "#skills" },
-    { name: "PROJECTS", href: "#projects" },
-    { name: "EXPERIENCE", href: "#experience" },
+    { name: "SKILLS",       href: "#skills" },
+    { name: "PROJECTS",     href: "#projects" },
+    { name: "EXPERIENCE",   href: "#experience" },
     { name: "TESTIMONIALS", href: "#testimonials" },
   ];
 
@@ -29,12 +33,12 @@ export default function Navbar() {
     >
       <div className="w-full max-w-[1400px] mx-auto flex items-center justify-between">
         
-        {/* Left Bound */}
+        {/* Brand */}
         <div className="text-neoblack font-display font-black text-2xl tracking-tighter lowercase z-10 relative">
-          niranjan.digital
+          {brand}
         </div>
 
-        {/* Center Bound */}
+        {/* Nav Links */}
         <div className="hidden md:flex items-center justify-center gap-8 font-mono text-sm font-bold z-10 relative">
           {navLinks.map((link) => (
             <a
@@ -47,15 +51,15 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Right Bound */}
+        {/* CTA */}
         <a
           href="#contact"
           className="hidden md:inline-block z-20 border-neo-black bg-neoyellow px-6 py-3 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
         >
-          SAY HELLO
+          {contactLabel}
         </a>
-        
-        {/* Mobile Bound */}
+
+        {/* Mobile */}
         <button className="md:hidden z-20 border-neo-black bg-neoyellow px-4 py-2 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]">
           MENU
         </button>
