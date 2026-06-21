@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+  
+  --color-neocream: #FFF9F0;
+  --color-neopink: #FF6B9E;
+  --color-neoyellow: #FACC15;
+  --color-neogreen: #10B981;
+  --color-neoblue: #818CF8;
+  --color-neoblack: #000000;
+}
+
+@layer base {
+  html, body {
+    background-color: #FFF9F0;
+    color: #000000;
+  }
+  
+  /* Custom Text Selection per v12.1 specs */
+  ::selection {
+    background-color: #FF6B9E;
+    color: #000000;
+  }
+}
+
+@layer utilities {
+  .border-neo-black {
+    border: 4px solid #000000;
+  }
+  
+  .shadow-neo-black {
+    box-shadow: 8px 8px 0px 0px #000000;
+  }
+  
+  .shadow-neo-pink {
+    box-shadow: 8px 8px 0px 0px #FF6B9E;
+  }
+
+  .shadow-neo-yellow {
+    box-shadow: 8px 8px 0px 0px #FACC15;
+  }
+
+  .shadow-neo-blue {
+    box-shadow: 8px 8px 0px 0px #818CF8;
+  }
+  
+  .shadow-neo-green {
+    box-shadow: 8px 8px 0px 0px #10B981;
+  }
+  
+  /* Neo-brutalist active states */
+  .active-neo-press {
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .active-neo-press:active {
+    transform: translate(8px, 8px);
+    box-shadow: none;
+  }
+  
+  .will-change-transform {
+    will-change: transform;
+  }
+}
