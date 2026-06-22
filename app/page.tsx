@@ -10,63 +10,54 @@ import DeprecatedArchive from "@/components/DeprecatedArchive";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { fetchPortfolioContent } from "@/lib/notion";
+import { fetchPortfolio } from "@/sanity/client";
 import type { SectionSettings } from "@/types/cms";
 
-export const revalidate = 60;
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Helper: build a SectionSettings object from a Notion key prefix
-// ─────────────────────────────────────────────────────────────────────────────
-function buildSettings(cms: Record<string, string>, prefix: string): SectionSettings {
-  return {
-    customFont:      cms[`${prefix} Custom Font`]         || "",
-    fontSizeDesktop: cms[`${prefix} Font Size Desktop`]   || "",
-    fontSizeMobile:  cms[`${prefix} Font Size Mobile`]    || "",
-    textColor:       cms[`${prefix} Text Color`]          || "",
-    backgroundColor: cms[`${prefix} Background Color`]    || "",
-    alignment:       (cms[`${prefix} Alignment`] as SectionSettings["alignment"]) || undefined,
-  };
-}
+// Disable all caching — CMS edits appear instantly after page refresh.
+// (revalidate = 0 is valid in Next.js 16 when cacheComponents is not enabled)
+export const revalidate = 0;
 
 export default async function Home() {
-  const cms = await fetchPortfolioContent();
+  // ── Fetch from Sanity. Returns null if projectId is not configured. ────────
+  const data = await fetchPortfolio();
 
-  // ─── GLOBAL THEME ───────────────────────────────────────────────────────────
-  const globalFont      = cms["Global Font"]             || "Space Grotesk";
-  const globalBgColor   = cms["Global Background Color"] || "";
-  const globalTextColor = cms["Global Text Color"]       || "";
-  const accentColorOne  = cms["Accent Color One"]        || "#FACC15";
-  const accentColorTwo  = cms["Accent Color Two"]        || "#FF6B9E";
+  // ─── GLOBAL THEME ──────────────────────────────────────────────────────────
+  const globalFont      = data?.globalFont      || "Space Grotesk";
+  const globalBgColor   = data?.globalBgColor   || "";
+  const globalTextColor = data?.globalTextColor  || "";
+  const accentColorOne  = data?.accentColorOne   || "#FACC15";
+  const accentColorTwo  = data?.accentColorTwo   || "#FF6B9E";
 
-  // ─── GLOBAL LAYOUT ──────────────────────────────────────────────────────────
-  const terminalPlacement = cms["Terminal Placement"] || "below-hero";
+  // ─── GLOBAL LAYOUT ─────────────────────────────────────────────────────────
+  const terminalPlacement = data?.terminalPlacement || "below-hero";
 
-  // ─── PER-SECTION SETTINGS ───────────────────────────────────────────────────
-  const heroSettings         = buildSettings(cms, "Hero");
-  const skillsSettings       = buildSettings(cms, "Skills");
-  const projectsSettings     = buildSettings(cms, "Projects");
-  const terminalSettings     = buildSettings(cms, "Terminal");
-  const mediaSettings        = buildSettings(cms, "Media");
-  const timelineSettings     = buildSettings(cms, "Timeline");
-  const archivesSettings     = buildSettings(cms, "Archives");
-  const testimonialsSettings = buildSettings(cms, "Testimonials");
-  const contactSettings      = buildSettings(cms, "Contact");
+  // ─── SECTION SETTINGS (nested Sanity objects) ──────────────────────────────
+  // Each settings object maps 1-to-1 to the SectionSettings type.
+  // Safe optional-chained access ensures zero crashes on empty document.
+  const heroSettings:         SectionSettings = data?.heroSettings         || {};
+  const skillsSettings:       SectionSettings = data?.skillsSettings       || {};
+  const projectsSettings:     SectionSettings = data?.projectsSettings     || {};
+  const terminalSettings:     SectionSettings = data?.terminalSettings     || {};
+  const mediaSettings:        SectionSettings = data?.mediaSettings        || {};
+  const timelineSettings:     SectionSettings = data?.timelineSettings     || {};
+  const archivesSettings:     SectionSettings = data?.archivesSettings     || {};
+  const testimonialsSettings: SectionSettings = data?.testimonialsSettings || {};
+  const contactSettings:      SectionSettings = data?.contactSettings      || {};
 
   // ─── DYNAMIC GOOGLE FONTS COMPILER ─────────────────────────────────────────
-  // Collect every font referenced anywhere → deduplicate → build one URL
-  const allFonts = [
+  // Collects every font referenced anywhere, deduplicates, builds one URL.
+  const allFonts: string[] = [
     globalFont,
-    heroSettings.customFont,
-    skillsSettings.customFont,
-    projectsSettings.customFont,
-    terminalSettings.customFont,
-    mediaSettings.customFont,
-    timelineSettings.customFont,
-    archivesSettings.customFont,
-    testimonialsSettings.customFont,
-    contactSettings.customFont,
-  ].filter((f): f is string => Boolean(f));
+    heroSettings?.customFont,
+    skillsSettings?.customFont,
+    projectsSettings?.customFont,
+    terminalSettings?.customFont,
+    mediaSettings?.customFont,
+    timelineSettings?.customFont,
+    archivesSettings?.customFont,
+    testimonialsSettings?.customFont,
+    contactSettings?.customFont,
+  ].filter((f): f is string => Boolean(f && f.trim() !== ""));
 
   const uniqueFonts = [...new Set(allFonts)];
   const googleFontsUrl =
@@ -77,157 +68,102 @@ export default async function Home() {
       : null;
 
   // ─── GLOBAL CSS VARIABLES ───────────────────────────────────────────────────
-  const globalCss = `
-    :root {
-      ${globalFont      ? `--font-global: '${globalFont}', sans-serif;`    : ""}
-      ${globalBgColor   ? `--color-bg-global: ${globalBgColor};`           : ""}
-      ${globalTextColor ? `--color-text-global: ${globalTextColor};`       : ""}
-      --accent-1: ${accentColorOne};
-      --accent-2: ${accentColorTwo};
-    }
-    ${globalFont      ? `body { font-family: var(--font-global); }`         : ""}
-    ${globalBgColor   ? `body { background-color: var(--color-bg-global); }` : ""}
-    ${globalTextColor ? `body { color: var(--color-text-global); }`         : ""}
-  `.trim();
+  const globalCss = [
+    ":root {",
+    globalFont      ? `  --font-global: '${globalFont}', sans-serif;`    : "",
+    globalBgColor   ? `  --color-bg-global: ${globalBgColor};`           : "",
+    globalTextColor ? `  --color-text-global: ${globalTextColor};`       : "",
+    `  --accent-1: ${accentColorOne};`,
+    `  --accent-2: ${accentColorTwo};`,
+    "}",
+    globalFont      ? `body { font-family: var(--font-global); }`         : "",
+    globalBgColor   ? `body { background-color: var(--color-bg-global); }` : "",
+    globalTextColor ? `body { color: var(--color-text-global); }`         : "",
+  ].filter(Boolean).join("\n");
 
   // ─── NAVBAR ─────────────────────────────────────────────────────────────────
-  const navBrand   = cms["Navbar Brand Name"]     || "niranjan.digital";
-  const navContact = cms["Navbar Contact Button"] || "SAY HELLO";
+  const navBrand   = data?.navbarBrandName     || "niranjan.digital";
+  const navContact = data?.navbarContactButton || "SAY HELLO";
 
   // ─── HERO ───────────────────────────────────────────────────────────────────
-  const heroHeadline  = cms["Hero Headline"]          || "BUILDING BOLD HARDWARE & WEB ARCHITECTURES";
-  const heroSubtext   = cms["Hero Subtext"]           || "Bridging embedded systems logic with scalable full-stack platforms.";
-  const heroCTA       = cms["Hero Button Text"]       || "EXPLORE WORK";
-  const heroPhotoUrl  = cms["Hero Profile Photo URL"] || "";
+  const heroHeadline = data?.heroHeadline       || "BUILDING BOLD HARDWARE & WEB ARCHITECTURES";
+  const heroSubtext  = data?.heroSubtext        || "Bridging embedded systems logic with scalable full-stack platforms.";
+  const heroCTA      = data?.heroButtonText     || "EXPLORE WORK";
+  const heroPhotoUrl = data?.heroProfilePhotoUrl || "";
 
   // ─── SKILLS ─────────────────────────────────────────────────────────────────
-  const skillsHeading    = cms["Skills Section Title"]    || "WHAT I CAN DO";
-  const skillsSubheading = cms["Skills Section Subtitle"] || "FOR YOU.";
-  const skill1 = cms["Skill 1"] || "";
-  const skill2 = cms["Skill 2"] || "";
-  const skill3 = cms["Skill 3"] || "";
-  const skill4 = cms["Skill 4"] || "";
+  const skillsHeading    = data?.skillsSectionTitle    || "WHAT I CAN DO";
+  const skillsSubheading = data?.skillsSectionSubtitle || "FOR YOU.";
+  const skillsList: string[] = data?.skillsList || [];
 
   // ─── PROJECTS ───────────────────────────────────────────────────────────────
-  const projectsHeading    = cms["Projects Section Title"]    || "SELECTED";
-  const projectsSubheading = cms["Projects Section Subtitle"] || "WORKS.";
-  const p1Event        = cms["Project 1 Event Tag"]       || "";
-  const p1Name         = cms["Project 1 Name"]            || "";
-  const p1Description  = cms["Project 1 Description"]     || "";
-  const p1Tech         = cms["Project 1 Tech Stack"]      || "";
-  const p1ImageUrl     = cms["Project 1 Screenshot URL"]  || "";
-  const p2Tag          = cms["Project 2 Tag"]             || "R&D STAGE";
-  const p2Name         = cms["Project 2 Name"]            || "[UNANNOUNCED]";
-  const p2Description  = cms["Project 2 Description"]     || "Next-generation integrated hardware & frontend systems prototype currently in internal development.";
+  const projectsHeading    = data?.projectsSectionTitle    || "SELECTED";
+  const projectsSubheading = data?.projectsSectionSubtitle || "WORKS.";
+  const projectsList = data?.projectsList || [];
+  const p1 = projectsList[0] || {};
+  const p2 = projectsList[1] || {};
 
   // ─── RECRUITER TERMINAL ──────────────────────────────────────────────────────
-  const metricsHardware = cms["Terminal Hardware Metric"] || "Logic Gates Built: XX";
-  const metricsSoftware = cms["Terminal Software Metric"] || "Components Rendered: XX";
-  const km1Label = cms["Key Metric 1 Label"] || "";
-  const km1Value = cms["Key Metric 1 Value"] || "";
-  const km2Label = cms["Key Metric 2 Label"] || "";
-  const km2Value = cms["Key Metric 2 Value"] || "";
-  const km3Label = cms["Key Metric 3 Label"] || "";
-  const km3Value = cms["Key Metric 3 Value"] || "";
-  const km4Label = cms["Key Metric 4 Label"] || "";
-  const km4Value = cms["Key Metric 4 Value"] || "";
-  const roi1Label = cms["ROI 1 Label"] || "";
-  const roi1Value = cms["ROI 1 Value"] || "";
-  const roi2Label = cms["ROI 2 Label"] || "";
-  const roi2Value = cms["ROI 2 Value"] || "";
-  const roi3Label = cms["ROI 3 Label"] || "";
-  const roi3Value = cms["ROI 3 Value"] || "";
+  const metricsHardware  = data?.terminalHardwareMetric || "Logic Gates Built: 7+";
+  const metricsSoftware  = data?.terminalSoftwareMetric || "Components Rendered: 400+";
+  const keyMetrics       = (data?.keyMetrics  || []).filter((m: {label?:string; value?:string}) => m.label && m.value);
+  const roiMetrics       = (data?.roiMetrics  || []).filter((m: {label?:string; value?:string}) => m.label && m.value);
 
   // ─── MEDIA PRODUCTION ────────────────────────────────────────────────────────
-  const mediaHeading    = cms["Media Section Title"]    || "VISUALS &";
-  const mediaSubheading = cms["Media Section Subtitle"] || "MOTION.";
-  const media1Title    = cms["Media Card 1 Title"]       || "";
-  const media1Desc     = cms["Media Card 1 Description"] || "";
-  const media1Tags     = cms["Media Card 1 Tags"]        || "";
-  const media1ImageUrl = cms["Media Card 1 Photo URL"]   || "";
-  const media2Title    = cms["Media Card 2 Title"]       || "";
-  const media2Desc     = cms["Media Card 2 Description"] || "";
-  const media2Tags     = cms["Media Card 2 Tags"]        || "";
-  const media2ImageUrl = cms["Media Card 2 Photo URL"]   || "";
-  const media3Title    = cms["Media Card 3 Title"]       || "";
-  const media3Desc     = cms["Media Card 3 Description"] || "";
-  const media3Tags     = cms["Media Card 3 Tags"]        || "";
-  const media3ImageUrl = cms["Media Card 3 Photo URL"]   || "";
+  const mediaHeading    = data?.mediaSectionTitle    || "VISUALS &";
+  const mediaSubheading = data?.mediaSectionSubtitle || "MOTION.";
+  const mediaCards      = data?.mediaCards || [];
 
   // ─── EXPERIENCE / TIMELINE ───────────────────────────────────────────────────
-  const expHeading    = cms["Timeline Section Title"]    || "MY";
-  const expSubheading = cms["Timeline Section Subtitle"] || "TIMELINE.";
-  const ms1Title  = cms["Timeline 1 Title"]        || "";
-  const ms1Org    = cms["Timeline 1 Organization"] || "";
-  const ms1Period = cms["Timeline 1 Period"]        || "";
-  const ms1Desc   = cms["Timeline 1 Description"]  || "";
-  const ms2Title  = cms["Timeline 2 Title"]        || "";
-  const ms2Org    = cms["Timeline 2 Organization"] || "";
-  const ms2Period = cms["Timeline 2 Period"]        || "";
-  const ms2Desc   = cms["Timeline 2 Description"]  || "";
-  const ms3Title  = cms["Timeline 3 Title"]        || "";
-  const ms3Org    = cms["Timeline 3 Organization"] || "";
-  const ms3Period = cms["Timeline 3 Period"]        || "";
-  const ms3Desc   = cms["Timeline 3 Description"]  || "";
+  const expHeading    = data?.timelineSectionTitle    || "MY";
+  const expSubheading = data?.timelineSectionSubtitle || "TIMELINE.";
+  const timelineEvents = data?.timelineEvents || [];
 
   // ─── DEPRECATED ARCHIVES ─────────────────────────────────────────────────────
-  const archHeading    = cms["Archives Section Title"]    || "DEPRECATED";
-  const archSubheading = cms["Archives Section Subtitle"] || "ARCHITECTURES.";
-  const arch1Version   = cms["Archive 1 Version"]        || "";
-  const arch1Error     = cms["Archive 1 Error Message"]  || "";
-  const arch1Desc      = cms["Archive 1 Description"]    || "";
+  const archHeading    = data?.archivesSectionTitle    || "DEPRECATED";
+  const archSubheading = data?.archivesSectionSubtitle || "ARCHITECTURES.";
+  const archivesList   = data?.archivesList || [];
 
   // ─── TESTIMONIALS ────────────────────────────────────────────────────────────
-  const testHeading    = cms["Testimonials Section Title"]    || "THE";
-  const testSubheading = cms["Testimonials Section Subtitle"] || "VAULT.";
-  const testSubtext    = cms["Testimonials Subtext"]          || "ACCESS ENCRYPTED TESTIMONIALS";
-  const t1Name = cms["Testimonial 1 Name"]  || "";
-  const t1Role = cms["Testimonial 1 Role"]  || "";
-  const t1Text = cms["Testimonial 1 Quote"] || "";
-  const t2Name = cms["Testimonial 2 Name"]  || "";
-  const t2Role = cms["Testimonial 2 Role"]  || "";
-  const t2Text = cms["Testimonial 2 Quote"] || "";
-  const t3Name = cms["Testimonial 3 Name"]  || "";
-  const t3Role = cms["Testimonial 3 Role"]  || "";
-  const t3Text = cms["Testimonial 3 Quote"] || "";
+  const testHeading    = data?.testimonialsSectionTitle    || "THE";
+  const testSubheading = data?.testimonialsSectionSubtitle || "VAULT.";
+  const testSubtext    = data?.testimonialsSubtext         || "ACCESS ENCRYPTED TESTIMONIALS";
+  const testimonialsList = data?.testimonialsList || [];
 
   // ─── CONTACT ─────────────────────────────────────────────────────────────────
-  const contactHeading = cms["Contact Section Title"]  || "SAY HELLO.";
-  const contactCTA     = cms["Contact Submit Button"]  || "TRANSMIT PAYLOAD";
+  const contactHeading = data?.contactSectionTitle  || "SAY HELLO.";
+  const contactCTA     = data?.contactSubmitButton  || "TRANSMIT PAYLOAD";
 
   // ─── FOOTER ──────────────────────────────────────────────────────────────────
-  const footerName    = cms["Footer Name"]           || "NIRANJAN S S";
-  const footerMarquee = cms["Footer Scrolling Text"] || "BUILDING BOLD ARCHITECTURES •";
-  const footerSysVer  = cms["Footer Version Tag"]    || "SYS.VER: 14.0 // NEO-BRUTALIST POP";
+  const footerName    = data?.footerName          || "NIRANJAN S S";
+  const footerMarquee = data?.footerScrollingText || "BUILDING BOLD ARCHITECTURES •";
+  const footerSysVer  = data?.footerVersionTag    || "SYS.VER: 14.0 // NEO-BRUTALIST POP";
 
-  // ─── TERMINAL PLACEMENT ──────────────────────────────────────────────────────
+  // ─── TERMINAL BLOCK ──────────────────────────────────────────────────────────
   const terminalBlock = (
     <RecruiterTerminal
       metricOne={metricsHardware}
       metricTwo={metricsSoftware}
       settings={terminalSettings}
-      keyMetricsOverride={[
-        { label: km1Label, value: km1Value },
-        { label: km2Label, value: km2Value },
-        { label: km3Label, value: km3Value },
-        { label: km4Label, value: km4Value },
-      ].filter(m => m.label && m.value)}
-      projectRoiOverride={[
-        { label: roi1Label, value: roi1Value },
-        { label: roi2Label, value: roi2Value },
-        { label: roi3Label, value: roi3Value },
-      ].filter(m => m.label && m.value)}
+      keyMetricsOverride={keyMetrics}
+      projectRoiOverride={roiMetrics}
     />
   );
 
   return (
     <>
-      {/* ── Dynamic Google Fonts ── */}
+      {/* ── Dynamic Google Fonts: loads all unique fonts in one request ── */}
+      {googleFontsUrl && (
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+      )}
+      {googleFontsUrl && (
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      )}
       {googleFontsUrl && (
         <link rel="stylesheet" href={googleFontsUrl} />
       )}
 
-      {/* ── Global CSS Variables injected from Notion theme ── */}
+      {/* ── Global CSS variables injected from Sanity theme fields ── */}
       {globalCss.trim() && (
         <style dangerouslySetInnerHTML={{ __html: globalCss }} />
       )}
@@ -236,6 +172,7 @@ export default async function Home() {
         <Navbar brand={navBrand} contactLabel={navContact} />
 
         <div className="w-full flex flex-col gap-16 md:gap-32 pb-32">
+
           <Hero
             headline={heroHeadline}
             subtext={heroSubtext}
@@ -244,27 +181,31 @@ export default async function Home() {
             settings={heroSettings}
           />
 
-          {/* Terminal: "below-hero" placement */}
+          {/* Recruiter Terminal — above or below hero based on Sanity field */}
           {terminalPlacement === "below-hero" && terminalBlock}
 
           <Skills
             heading={skillsHeading}
             subheading={skillsSubheading}
-            skillOverrides={[skill1, skill2, skill3, skill4].filter(Boolean)}
+            skillOverrides={skillsList}
             settings={skillsSettings}
           />
 
           <Projects
             heading={projectsHeading}
             subheading={projectsSubheading}
-            p1Event={p1Event}
-            p1Name={p1Name}
-            p1Description={p1Description}
-            p1Tech={p1Tech ? p1Tech.split(",").map(s => s.trim()).filter(Boolean) : []}
-            p1ImageUrl={p1ImageUrl}
-            p2Tag={p2Tag}
-            p2Name={p2Name}
-            p2Description={p2Description}
+            p1Event={p1.eventTag         || ""}
+            p1Name={p1.name              || ""}
+            p1Description={p1.description || ""}
+            p1Tech={
+              p1.techStack
+                ? String(p1.techStack).split(",").map((s: string) => s.trim()).filter(Boolean)
+                : []
+            }
+            p1ImageUrl={p1.screenshotUrl   || ""}
+            p2Tag={p2.eventTag             || "R&D STAGE"}
+            p2Name={p2.name                || "[UNANNOUNCED]"}
+            p2Description={p2.description  || "Next-generation integrated hardware & frontend systems prototype currently in internal development."}
             settings={projectsSettings}
           />
 
@@ -272,31 +213,51 @@ export default async function Home() {
             heading={mediaHeading}
             subheading={mediaSubheading}
             settings={mediaSettings}
-            mediaOverrides={[
-              { title: media1Title, desc: media1Desc, tags: media1Tags, imageUrl: media1ImageUrl },
-              { title: media2Title, desc: media2Desc, tags: media2Tags, imageUrl: media2ImageUrl },
-              { title: media3Title, desc: media3Desc, tags: media3Tags, imageUrl: media3ImageUrl },
-            ]}
+            mediaOverrides={mediaCards.map((c: {
+              title?: string;
+              description?: string;
+              tags?: string;
+              photoUrl?: string;
+            }) => ({
+              title:    c.title       || "",
+              desc:     c.description || "",
+              tags:     c.tags        || "",
+              imageUrl: c.photoUrl    || "",
+            }))}
           />
 
           <Experience
             heading={expHeading}
             subheading={expSubheading}
             settings={timelineSettings}
-            milestoneOverrides={[
-              { title: ms1Title, org: ms1Org, period: ms1Period, desc: ms1Desc },
-              { title: ms2Title, org: ms2Org, period: ms2Period, desc: ms2Desc },
-              { title: ms3Title, org: ms3Org, period: ms3Period, desc: ms3Desc },
-            ].filter(m => m.title)}
+            milestoneOverrides={timelineEvents.map((e: {
+              title?: string;
+              organization?: string;
+              period?: string;
+              description?: string;
+            }) => ({
+              title:  e.title        || "",
+              org:    e.organization || "",
+              period: e.period       || "",
+              desc:   e.description  || "",
+            }))}
           />
 
           <DeprecatedArchive
             heading={archHeading}
             subheading={archSubheading}
             settings={archivesSettings}
-            archiveOverrides={[
-              { id: "arch1", version: arch1Version, error: arch1Error, description: arch1Desc },
-            ].filter(a => a.version)}
+            archiveOverrides={archivesList.map((a: {
+              _key?: string;
+              version?: string;
+              errorMessage?: string;
+              description?: string;
+            }) => ({
+              id:          a._key        || a.version || "arch",
+              version:     a.version     || "",
+              error:       a.errorMessage || "",
+              description: a.description  || "",
+            })).filter((a: { version: string }) => a.version)}
           />
 
           <Testimonials
@@ -304,16 +265,21 @@ export default async function Home() {
             subheading={testSubheading}
             subtext={testSubtext}
             settings={testimonialsSettings}
-            testimonialOverrides={[
-              { id: "t1", name: t1Name, role: t1Role, text: t1Text },
-              { id: "t2", name: t2Name, role: t2Role, text: t2Text },
-              { id: "t3", name: t3Name, role: t3Role, text: t3Text },
-            ].filter(t => t.name && t.text)}
+            testimonialOverrides={testimonialsList.map((t: {
+              _key?: string;
+              name?: string;
+              role?: string;
+              quote?: string;
+            }) => ({
+              id:   t._key  || t.name || "t",
+              name: t.name  || "",
+              role: t.role  || "",
+              text: t.quote || "",
+            })).filter((t: { name: string; text: string }) => t.name && t.text)}
           />
 
           <Contact heading={contactHeading} cta={contactCTA} settings={contactSettings} />
 
-          {/* Terminal: "above-footer" placement */}
           {terminalPlacement === "above-footer" && terminalBlock}
         </div>
 

@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow Sanity Studio to run embedded at /studio
+  // These packages need transpilation for the App Router
+  transpilePackages: ["next-sanity"],
+
   images: {
     remotePatterns: [
       // Cloudinary (recommended - free 25GB CDN)
