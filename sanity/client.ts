@@ -51,11 +51,6 @@ export const PORTFOLIO_QUERY = `
     globalTextColor,
     accentColorOne,
     accentColorTwo,
-
-    // ── Global Layout ──
-    sectionOrder,
-    terminalPlacement,
-
     // ── Global: Navbar & Footer ──
     navbarBrandName,
     navbarContactButton,
@@ -63,90 +58,24 @@ export const PORTFOLIO_QUERY = `
     footerVersionTag,
     footerScrollingText,
 
-    // ── Hero ──
-    heroSettings,
-    heroHeadline,
-    heroSubtext,
-    heroButtonText,
-    "heroProfilePhotoUrl": heroProfilePhoto.asset->url,
-
-    // ── Skills ──
-    skillsSettings,
-    skillsSectionTitle,
-    skillsSectionSubtitle,
-    skillsList,
-
-    // ── Projects ──
-    projectsSettings,
-    projectsSectionTitle,
-    projectsSectionSubtitle,
-    projectsList[] {
-      _key,
-      name,
-      description,
-      techStack,
-      eventTag,
-      "screenshotUrl": screenshot.asset->url
-    },
-
-    // ── Recruiter Terminal ──
-    terminalSettings,
-    terminalHardwareMetric,
-    terminalSoftwareMetric,
-    keyMetrics[] { _key, label, value },
-    roiMetrics[] { _key, label, value },
-
-    // ── Media Production ──
-    mediaSettings,
-    mediaSectionTitle,
-    mediaSectionSubtitle,
-    mediaCards[] {
-      _key,
-      title,
-      description,
-      tags,
-      "photoUrl": photo.asset->url
-    },
-
-    // ── Timeline ──
-    timelineSettings,
-    timelineSectionTitle,
-    timelineSectionSubtitle,
-    timelineEvents[] {
-      _key,
-      title,
-      organization,
-      period,
-      description
-    },
-
-    // ── Archives ──
-    archivesSettings,
-    archivesSectionTitle,
-    archivesSectionSubtitle,
-    archivesList[] {
-      _key,
-      version,
-      description,
-      errorMessage
-    },
-
-    // ── Testimonials ──
-    testimonialsSettings,
-    testimonialsSectionTitle,
-    testimonialsSectionSubtitle,
-    testimonialsSubtext,
-    testimonialsList[] {
-      _key,
-      name,
-      role,
-      quote
-    },
-
-    // ── Contact ──
-    contactSettings,
-    contactSectionTitle,
-    contactSubmitButton
+    pageBuilder[] {
+      ...,
+      _type == "sectionHero" => {
+        "heroProfilePhotoUrl": heroProfilePhoto.asset->url
+      },
+      _type == "sectionProjects" => {
+        projectsList[] {
+          ...,
+          "screenshotUrl": screenshot.asset->url
+        }
+      },
+      _type == "sectionMedia" => {
+        mediaCards[] {
+          ...,
+          "photoUrl": photo.asset->url
+        }
+      }
+    }
   }
 `;
 

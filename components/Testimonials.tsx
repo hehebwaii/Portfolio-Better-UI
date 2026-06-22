@@ -53,8 +53,8 @@ export default function Testimonials({
         <p className="mt-4 font-mono font-bold text-sm text-neoblack opacity-60 uppercase tracking-widest">{subtext}</p>
       </div>
 
-      <div className="relative z-20 cursor-pointer active-neo-press hover:scale-105 transition-transform pt-16" onClick={() => setIsOpen(!isOpen)}>
-        <svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[8px_8px_0px_#000]">
+      <div className="relative z-20 cursor-pointer active-neo-press hover:scale-105 transition-transform p-12 md:p-16 !overflow-visible" onClick={() => setIsOpen(!isOpen)}>
+        <svg width="160" height="120" viewBox="0 0 160 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[8px_8px_0px_#000] !overflow-visible">
           <path d="M10 20C10 14.4772 14.4772 10 20 10H50L60 25H140C145.523 25 150 29.4772 150 35V100C150 105.523 145.523 110 140 110H20C14.4772 110 10 105.523 10 100V20Z" fill="#FACC15" stroke="black" strokeWidth="4"/>
           <motion.rect x="30" y="30" width="100" height="70" fill="#FFF" stroke="black" strokeWidth="4" animate={{ y: isOpen ? -30 : 0, rotate: isOpen ? 5 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} />
           <motion.rect x="40" y="40" width="80" height="70" fill="#FF6B9E" stroke="black" strokeWidth="4" animate={{ y: isOpen ? -15 : 0, rotate: isOpen ? -5 : 0 }} transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.05 }} />
