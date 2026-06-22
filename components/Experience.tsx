@@ -28,15 +28,19 @@ export default function Experience({
   const { scrollYProgress } = useScroll({ target: targetRef, offset: ["start start", "end end"] });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-100%"]);
 
-  const milestones = content.milestones.map((def, i) => {
-    const ov = milestoneOverrides[i];
-    return {
-      title:        ov?.title  || def.title,
-      organization: ov?.org    || def.organization,
-      period:       ov?.period || def.period,
-      description:  ov?.desc   || def.description,
-    };
-  });
+  const milestones = milestoneOverrides.length > 0
+    ? milestoneOverrides.map(ov => ({
+        title: ov.title,
+        organization: ov.org,
+        period: ov.period,
+        description: ov.desc,
+      }))
+    : content.milestones.map(def => ({
+        title: def.title,
+        organization: def.organization,
+        period: def.period,
+        description: def.description,
+      }));
 
   return (
     <section

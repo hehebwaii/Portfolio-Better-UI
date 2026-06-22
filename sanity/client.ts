@@ -53,6 +53,7 @@ export const PORTFOLIO_QUERY = `
     accentColorTwo,
 
     // ── Global Layout ──
+    sectionOrder,
     terminalPlacement,
 
     // ── Global: Navbar & Footer ──

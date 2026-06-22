@@ -129,11 +129,43 @@ const portfolio = defineType({
 
     // ── LAYOUT ───────────────────────────────────────────────────────────────
     defineField({
+      name: "sectionOrder",
+      title: "Section Rendering Order",
+      type: "array",
+      group: "layout",
+      of: [{ type: "string" }],
+      options: {
+        list: [
+          { title: "Hero", value: "Hero" },
+          { title: "Skills", value: "Skills" },
+          { title: "Projects", value: "Projects" },
+          { title: "Recruiter Terminal (Metrics)", value: "Metrics" },
+          { title: "Media Production", value: "Media" },
+          { title: "Timeline / Experience", value: "Timeline" },
+          { title: "Deprecated Archives", value: "Archives" },
+          { title: "Testimonials", value: "Testimonials" },
+          { title: "Contact", value: "Contact" },
+        ],
+      },
+      description: "Drag and drop to reorder the sections on your website. Remove a section to hide it.",
+      initialValue: [
+        "Hero",
+        "Skills",
+        "Projects",
+        "Metrics",
+        "Media",
+        "Timeline",
+        "Archives",
+        "Testimonials",
+        "Contact",
+      ],
+    }),
+    defineField({
       name: "terminalPlacement",
-      title: "Terminal Placement",
+      title: "Terminal Placement (Legacy)",
       type: "string",
       group: "layout",
-      description: "Where the Recruiter Terminal block appears on the page.",
+      description: "Deprecated: Use Section Ordering above. Where the Recruiter Terminal block appears.",
       initialValue: "below-hero",
       options: {
         list: [

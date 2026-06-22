@@ -29,7 +29,17 @@ export default async function Home() {
   const accentColorTwo  = data?.accentColorTwo   || "#FF6B9E";
 
   // ─── GLOBAL LAYOUT ─────────────────────────────────────────────────────────
-  const terminalPlacement = data?.terminalPlacement || "below-hero";
+  const sectionOrder = data?.sectionOrder || [
+    "Hero",
+    "Skills",
+    "Projects",
+    "Metrics",
+    "Media",
+    "Timeline",
+    "Archives",
+    "Testimonials",
+    "Contact",
+  ];
 
   // ─── SECTION SETTINGS (nested Sanity objects) ──────────────────────────────
   // Each settings object maps 1-to-1 to the SectionSettings type.
@@ -173,114 +183,146 @@ export default async function Home() {
 
         <div className="w-full flex flex-col gap-16 md:gap-32 pb-32">
 
-          <Hero
-            headline={heroHeadline}
-            subtext={heroSubtext}
-            cta={heroCTA}
-            photoUrl={heroPhotoUrl}
-            settings={heroSettings}
-          />
-
-          {/* Recruiter Terminal — above or below hero based on Sanity field */}
-          {terminalPlacement === "below-hero" && terminalBlock}
-
-          <Skills
-            heading={skillsHeading}
-            subheading={skillsSubheading}
-            skillOverrides={skillsList}
-            settings={skillsSettings}
-          />
-
-          <Projects
-            heading={projectsHeading}
-            subheading={projectsSubheading}
-            p1Event={p1.eventTag         || ""}
-            p1Name={p1.name              || ""}
-            p1Description={p1.description || ""}
-            p1Tech={
-              p1.techStack
-                ? String(p1.techStack).split(",").map((s: string) => s.trim()).filter(Boolean)
-                : []
+          {sectionOrder.map((section: string, index: number) => {
+            switch (section) {
+              case "Hero":
+                return (
+                  <Hero
+                    key={`section-${index}`}
+                    headline={heroHeadline}
+                    subtext={heroSubtext}
+                    cta={heroCTA}
+                    photoUrl={heroPhotoUrl}
+                    settings={heroSettings}
+                  />
+                );
+              case "Metrics":
+                return React.cloneElement(terminalBlock, { key: `section-${index}` });
+              case "Skills":
+                return (
+                  <Skills
+                    key={`section-${index}`}
+                    heading={skillsHeading}
+                    subheading={skillsSubheading}
+                    skillOverrides={skillsList}
+                    settings={skillsSettings}
+                  />
+                );
+              case "Projects":
+                return (
+                  <Projects
+                    key={`section-${index}`}
+                    heading={projectsHeading}
+                    subheading={projectsSubheading}
+                    p1Event={p1.eventTag         || ""}
+                    p1Name={p1.name              || ""}
+                    p1Description={p1.description || ""}
+                    p1Tech={
+                      p1.techStack
+                        ? String(p1.techStack).split(",").map((s: string) => s.trim()).filter(Boolean)
+                        : []
+                    }
+                    p1ImageUrl={p1.screenshotUrl   || ""}
+                    p2Tag={p2.eventTag             || "R&D STAGE"}
+                    p2Name={p2.name                || "[UNANNOUNCED]"}
+                    p2Description={p2.description  || "Next-generation integrated hardware & frontend systems prototype currently in internal development."}
+                    settings={projectsSettings}
+                  />
+                );
+              case "Media":
+                return (
+                  <MediaProduction
+                    key={`section-${index}`}
+                    heading={mediaHeading}
+                    subheading={mediaSubheading}
+                    settings={mediaSettings}
+                    mediaOverrides={mediaCards.map((c: {
+                      title?: string;
+                      description?: string;
+                      tags?: string;
+                      photoUrl?: string;
+                    }) => ({
+                      title:    c.title       || "",
+                      desc:     c.description || "",
+                      tags:     c.tags        || "",
+                      imageUrl: c.photoUrl    || "",
+                    }))}
+                  />
+                );
+              case "Timeline":
+                return (
+                  <Experience
+                    key={`section-${index}`}
+                    heading={expHeading}
+                    subheading={expSubheading}
+                    settings={timelineSettings}
+                    milestoneOverrides={timelineEvents.map((e: {
+                      title?: string;
+                      organization?: string;
+                      period?: string;
+                      description?: string;
+                    }) => ({
+                      title:  e.title        || "",
+                      org:    e.organization || "",
+                      period: e.period       || "",
+                      desc:   e.description  || "",
+                    }))}
+                  />
+                );
+              case "Archives":
+                return (
+                  <DeprecatedArchive
+                    key={`section-${index}`}
+                    heading={archHeading}
+                    subheading={archSubheading}
+                    settings={archivesSettings}
+                    archiveOverrides={archivesList.map((a: {
+                      _key?: string;
+                      version?: string;
+                      errorMessage?: string;
+                      description?: string;
+                    }) => ({
+                      id:          a._key        || a.version || "arch",
+                      version:     a.version     || "",
+                      error:       a.errorMessage || "",
+                      description: a.description  || "",
+                    })).filter((a: { version: string }) => a.version)}
+                  />
+                );
+              case "Testimonials":
+                return (
+                  <Testimonials
+                    key={`section-${index}`}
+                    heading={testHeading}
+                    subheading={testSubheading}
+                    subtext={testSubtext}
+                    settings={testimonialsSettings}
+                    testimonialOverrides={testimonialsList.map((t: {
+                      _key?: string;
+                      name?: string;
+                      role?: string;
+                      quote?: string;
+                    }) => ({
+                      id:   t._key  || t.name || "t",
+                      name: t.name  || "",
+                      role: t.role  || "",
+                      text: t.quote || "",
+                    })).filter((t: { name: string; text: string }) => t.name && t.text)}
+                  />
+                );
+              case "Contact":
+                return (
+                  <Contact 
+                    key={`section-${index}`}
+                    heading={contactHeading} 
+                    cta={contactCTA} 
+                    settings={contactSettings} 
+                  />
+                );
+              default:
+                return null;
             }
-            p1ImageUrl={p1.screenshotUrl   || ""}
-            p2Tag={p2.eventTag             || "R&D STAGE"}
-            p2Name={p2.name                || "[UNANNOUNCED]"}
-            p2Description={p2.description  || "Next-generation integrated hardware & frontend systems prototype currently in internal development."}
-            settings={projectsSettings}
-          />
-
-          <MediaProduction
-            heading={mediaHeading}
-            subheading={mediaSubheading}
-            settings={mediaSettings}
-            mediaOverrides={mediaCards.map((c: {
-              title?: string;
-              description?: string;
-              tags?: string;
-              photoUrl?: string;
-            }) => ({
-              title:    c.title       || "",
-              desc:     c.description || "",
-              tags:     c.tags        || "",
-              imageUrl: c.photoUrl    || "",
-            }))}
-          />
-
-          <Experience
-            heading={expHeading}
-            subheading={expSubheading}
-            settings={timelineSettings}
-            milestoneOverrides={timelineEvents.map((e: {
-              title?: string;
-              organization?: string;
-              period?: string;
-              description?: string;
-            }) => ({
-              title:  e.title        || "",
-              org:    e.organization || "",
-              period: e.period       || "",
-              desc:   e.description  || "",
-            }))}
-          />
-
-          <DeprecatedArchive
-            heading={archHeading}
-            subheading={archSubheading}
-            settings={archivesSettings}
-            archiveOverrides={archivesList.map((a: {
-              _key?: string;
-              version?: string;
-              errorMessage?: string;
-              description?: string;
-            }) => ({
-              id:          a._key        || a.version || "arch",
-              version:     a.version     || "",
-              error:       a.errorMessage || "",
-              description: a.description  || "",
-            })).filter((a: { version: string }) => a.version)}
-          />
-
-          <Testimonials
-            heading={testHeading}
-            subheading={testSubheading}
-            subtext={testSubtext}
-            settings={testimonialsSettings}
-            testimonialOverrides={testimonialsList.map((t: {
-              _key?: string;
-              name?: string;
-              role?: string;
-              quote?: string;
-            }) => ({
-              id:   t._key  || t.name || "t",
-              name: t.name  || "",
-              role: t.role  || "",
-              text: t.quote || "",
-            })).filter((t: { name: string; text: string }) => t.name && t.text)}
-          />
-
-          <Contact heading={contactHeading} cta={contactCTA} settings={contactSettings} />
-
-          {terminalPlacement === "above-footer" && terminalBlock}
+          })}
         </div>
 
         <Footer name={footerName} marqueeText={footerMarquee} sysVer={footerSysVer} />
