@@ -19,7 +19,7 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
   
   const animType = settings?.entryAnimation || "fade-up";
   
-  const variants = {
+  const variants: any = {
     hidden: { 
       opacity: 0, 
       y: animType === "fade-up" ? 50 : 0, 
@@ -33,7 +33,7 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
         type: animType === "brutalist-slam" ? "spring" : "tween",
         stiffness: 200, 
         damping: 15,
-        duration: animType === "fade-up" ? 0.8 : undefined 
+        ...(animType === "fade-up" ? { duration: 0.8 } : {})
       }
     }
   };
