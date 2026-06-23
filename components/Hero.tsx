@@ -100,7 +100,7 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
           )}
         </div>
 
-      </div>
+      </motion.div>
     </section>
   );
 }
