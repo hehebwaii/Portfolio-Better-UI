@@ -1,13 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Download } from "lucide-react";
+
+interface NavItem {
+  _key?: string;
+  label: string;
+  targetId: string;
+}
 
 interface NavbarProps {
   brand: string;
   contactLabel: string;
+  navItems?: NavItem[];
+  resumeUrl?: string | null;
 }
 
-export default function Navbar({ brand, contactLabel }: NavbarProps) {
+export default function Navbar({ brand, contactLabel, navItems = [], resumeUrl }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -17,13 +26,6 @@ export default function Navbar({ brand, contactLabel }: NavbarProps) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const navLinks = [
-    { name: "SKILLS",       href: "#skills" },
-    { name: "PROJECTS",     href: "#projects" },
-    { name: "EXPERIENCE",   href: "#experience" },
-    { name: "TESTIMONIALS", href: "#testimonials" },
-  ];
 
   return (
     <nav
@@ -40,29 +42,37 @@ export default function Navbar({ brand, contactLabel }: NavbarProps) {
 
         {/* Nav Links */}
         <div className="hidden md:flex items-center justify-center gap-8 font-mono text-sm font-bold z-10 relative">
-          {navLinks.map((link) => (
+          {navItems && navItems.map((link) => (
             <a
-              key={link.name}
-              href={link.href}
+              key={link._key || link.label}
+              href={`#${link.targetId}`}
               className="text-neoblack md:hover:text-neopink md:hover:-translate-y-1 transition-transform duration-75 uppercase tracking-widest z-20 cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
             >
-              {link.name}
+              {link.label}
             </a>
           ))}
         </div>
 
-        {/* CTA */}
-        <a
-          href="#contact"
-          className="hidden md:inline-block z-20 border-neo-black bg-neoyellow px-6 py-3 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
-        >
-          {contactLabel}
-        </a>
-
-        {/* Mobile */}
-        <button className="md:hidden z-20 border-neo-black bg-neoyellow px-4 py-2 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]">
-          MENU
-        </button>
+        {/* CTAs */}
+        <div className="flex items-center gap-4">
+          {resumeUrl && (
+            <a
+              href={resumeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden md:flex items-center gap-2 z-20 border-neo-black bg-white px-4 py-3 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
+            >
+              <Download size={16} strokeWidth={3} /> RESUME
+            </a>
+          )}
+          
+          <a
+            href="#contact"
+            className="hidden md:inline-block z-20 border-neo-black bg-neoyellow px-6 py-3 rounded-full font-mono text-sm font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
+          >
+            {contactLabel}
+          </a>
+        </div>
       </div>
     </nav>
   );

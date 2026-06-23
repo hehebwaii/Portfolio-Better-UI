@@ -9,8 +9,9 @@ import Experience from "@/components/Experience";
 import DeprecatedArchive from "@/components/DeprecatedArchive";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
+import Sandbox from "@/components/Sandbox";
 import Footer from "@/components/Footer";
-import { fetchPortfolio } from "@/sanity/client";
+import { fetchPortfolio, urlFor } from "@/sanity/client";
 
 export const revalidate = 0;
 
@@ -39,6 +40,7 @@ export default async function Home() {
       case "sectionArchives": return block.archivesSettings?.customFont;
       case "sectionTestimonials": return block.testimonialsSettings?.customFont;
       case "sectionContact": return block.contactSettings?.customFont;
+      case "sectionSandbox": return block.sandboxSettings?.customFont;
       default: return null;
     }
   });
@@ -65,6 +67,8 @@ export default async function Home() {
 
   // ─── NAVBAR & FOOTER ────────────────────────────────────────────────────────
   const navBrand   = data?.navbarBrandName     || "niranjan.digital";
+  const navItems   = data?.navItems            || [];
+  const resumeUrl  = data?.resumeUrl           || null;
   const navContact = data?.navbarContactButton || "SAY HELLO";
   const footerName    = data?.footerName          || "NIRANJAN S S";
   const footerMarquee = data?.footerScrollingText || "BUILDING BOLD ARCHITECTURES •";
@@ -77,147 +81,148 @@ export default async function Home() {
       {googleFontsUrl && <link rel="stylesheet" href={googleFontsUrl} />}
       {globalCss.trim() && <style dangerouslySetInnerHTML={{ __html: globalCss }} />}
 
-      <main className="relative w-full max-w-[100vw] min-h-screen bg-neocream overflow-x-clip">
-        <Navbar brand={navBrand} contactLabel={navContact} />
+      <main className="relative w-full max-w-[100vw] min-h-screen bg-neocream overflow-x-clip scroll-smooth">
+        <Navbar brand={navBrand} navItems={navItems} resumeUrl={resumeUrl} contactLabel={navContact} />
 
         <div className="w-full flex flex-col gap-16 md:gap-32 pb-32">
           {pageBuilder.map((block: any, index: number) => {
             const key = block._key || `block-${index}`;
+            const anchorId = block.settings?.sectionId || block._key || `section-${index}`;
 
-            switch (block._type) {
-              case "sectionHero":
-                return (
-                  <Hero
-                    key={key}
-                    headline={block.heroHeadline || "BUILDING BOLD HARDWARE & WEB ARCHITECTURES"}
-                    subtext={block.heroSubtext || "Bridging embedded systems logic with scalable full-stack platforms."}
-                    cta={block.heroButtonText || "EXPLORE WORK"}
-                    photoUrl={block.heroProfilePhotoUrl || ""}
-                    settings={block.heroSettings || {}}
-                  />
-                );
+            return (
+              <div id={anchorId} key={key} className="w-full scroll-mt-[100px]">
+                {(() => {
+                  switch (block._type) {
+                    case "sectionHero":
+                      return (
+                        <Hero
+                          headline={block.heroHeadline}
+                          subtext={block.heroSubtext}
+                          cta={block.heroButtonText}
+                          photoUrl={block.heroProfilePhoto ? urlFor(block.heroProfilePhoto).url() : ""}
+                          settings={block.heroSettings}
+                        />
+                      );
 
-              case "sectionMetrics":
-                return (
-                  <RecruiterTerminal
-                    key={key}
-                    metricOne={block.terminalHardwareMetric || "Logic Gates Built: 7+"}
-                    metricTwo={block.terminalSoftwareMetric || "Components Rendered: 400+"}
-                    settings={block.terminalSettings || {}}
-                    keyMetricsOverride={(block.keyMetrics || []).filter((m: any) => m.label && m.value)}
-                    projectRoiOverride={(block.roiMetrics || []).filter((m: any) => m.label && m.value)}
-                  />
-                );
+                    case "sectionMetrics":
+                      return (
+                        <RecruiterTerminal
+                          metricOne={block.terminalHardwareMetric}
+                          metricTwo={block.terminalSoftwareMetric}
+                          settings={block.terminalSettings}
+                          keyMetricsOverride={(block.keyMetrics || [])}
+                          projectRoiOverride={(block.roiMetrics || [])}
+                        />
+                      );
 
-              case "sectionSkills":
-                return (
-                  <Skills
-                    key={key}
-                    heading={block.skillsSectionTitle || "WHAT I CAN DO"}
-                    subheading={block.skillsSectionSubtitle || "FOR YOU."}
-                    skillOverrides={block.skillsList || []}
-                    settings={block.skillsSettings || {}}
-                  />
-                );
+                    case "sectionSkills":
+                      return (
+                        <Skills
+                          heading={block.skillsSectionTitle}
+                          subheading={block.skillsSectionSubtitle}
+                          skillOverrides={block.skillsList}
+                          settings={block.skillsSettings}
+                        />
+                      );
 
-              case "sectionProjects":
-                const p1 = block.projectsList?.[0] || {};
-                const p2 = block.projectsList?.[1] || {};
-                return (
-                  <Projects
-                    key={key}
-                    heading={block.projectsSectionTitle || "SELECTED"}
-                    subheading={block.projectsSectionSubtitle || "WORKS."}
-                    p1Event={p1.eventTag || ""}
-                    p1Name={p1.name || ""}
-                    p1Description={p1.description || ""}
-                    p1Tech={p1.techStack ? String(p1.techStack).split(",").map(s => s.trim()).filter(Boolean) : []}
-                    p1ImageUrl={p1.screenshotUrl || ""}
-                    p2Tag={p2.eventTag || "R&D STAGE"}
-                    p2Name={p2.name || "[UNANNOUNCED]"}
-                    p2Description={p2.description || "Next-generation integrated hardware & frontend systems prototype currently in internal development."}
-                    settings={block.projectsSettings || {}}
-                  />
-                );
+                    case "sectionProjects":
+                      const p1 = block.projectsList?.[0] || {};
+                      const p2 = block.projectsList?.[1] || {};
+                      return (
+                        <Projects
+                          heading={block.projectsSectionTitle}
+                          subheading={block.projectsSectionSubtitle}
+                          p1Event={p1.eventTag}
+                          p1Name={p1.name}
+                          p1Description={p1.description}
+                          p1Tech={p1.techStack ? String(p1.techStack).split(",").map(s => s.trim()).filter(Boolean) : []}
+                          p1ImageUrl={p1.screenshot ? urlFor(p1.screenshot).url() : ""}
+                          p2Tag={p2.eventTag}
+                          p2Name={p2.name}
+                          p2Description={p2.description}
+                          settings={block.projectsSettings}
+                        />
+                      );
 
-              case "sectionMedia":
-                return (
-                  <MediaProduction
-                    key={key}
-                    heading={block.mediaSectionTitle || "VISUALS &"}
-                    subheading={block.mediaSectionSubtitle || "MOTION."}
-                    settings={block.mediaSettings || {}}
-                    mediaOverrides={(block.mediaCards || []).map((c: any) => ({
-                      title: c.title || "",
-                      desc: c.description || "",
-                      tags: c.tags || "",
-                      imageUrl: c.photoUrl || "",
-                    }))}
-                  />
-                );
+                    case "sectionMedia":
+                      return (
+                        <MediaProduction
+                          heading={block.mediaSectionTitle}
+                          subheading={block.mediaSectionSubtitle}
+                          settings={block.mediaSettings}
+                          mediaOverrides={(block.mediaCards || []).map((c: any) => ({
+                            title: c.title,
+                            desc: c.description,
+                            tags: c.tags,
+                            imageUrl: c.photo ? urlFor(c.photo).url() : "",
+                          }))}
+                        />
+                      );
 
-              case "sectionTimeline":
-                return (
-                  <Experience
-                    key={key}
-                    heading={block.timelineSectionTitle || "MY"}
-                    subheading={block.timelineSectionSubtitle || "TIMELINE."}
-                    settings={block.timelineSettings || {}}
-                    milestoneOverrides={(block.timelineEvents || []).map((e: any) => ({
-                      title: e.title || "",
-                      org: e.organization || "",
-                      period: e.period || "",
-                      desc: e.description || "",
-                    }))}
-                  />
-                );
+                    case "sectionTimeline":
+                      return (
+                        <Experience
+                          heading={block.timelineSectionTitle}
+                          subheading={block.timelineSectionSubtitle}
+                          settings={block.timelineSettings}
+                          milestoneOverrides={(block.timelineEvents || []).map((e: any) => ({
+                            title: e.title,
+                            org: e.organization,
+                            period: e.period,
+                            desc: e.description,
+                          }))}
+                        />
+                      );
 
-              case "sectionArchives":
-                return (
-                  <DeprecatedArchive
-                    key={key}
-                    heading={block.archivesSectionTitle || "DEPRECATED"}
-                    subheading={block.archivesSectionSubtitle || "ARCHITECTURES."}
-                    settings={block.archivesSettings || {}}
-                    archiveOverrides={(block.archivesList || []).map((a: any) => ({
-                      id: a._key || a.version || "arch",
-                      version: a.version || "",
-                      error: a.errorMessage || "",
-                      description: a.description || "",
-                    })).filter((a: any) => a.version)}
-                  />
-                );
+                    case "sectionArchives":
+                      return (
+                        <DeprecatedArchive
+                          heading={block.archivesSectionTitle}
+                          subheading={block.archivesSectionSubtitle}
+                          settings={block.archivesSettings}
+                          archiveOverrides={(block.archivesList || []).map((a: any) => ({
+                            id: a._key,
+                            version: a.version,
+                            error: a.errorMessage,
+                            description: a.description,
+                          }))}
+                        />
+                      );
 
-              case "sectionTestimonials":
-                return (
-                  <Testimonials
-                    key={key}
-                    heading={block.testimonialsSectionTitle || "THE"}
-                    subheading={block.testimonialsSectionSubtitle || "VAULT."}
-                    subtext={block.testimonialsSubtext || "ACCESS ENCRYPTED TESTIMONIALS"}
-                    settings={block.testimonialsSettings || {}}
-                    testimonialOverrides={(block.testimonialsList || []).map((t: any) => ({
-                      id: t._key || t.name || "t",
-                      name: t.name || "",
-                      role: t.role || "",
-                      text: t.quote || "",
-                    })).filter((t: any) => t.name && t.text)}
-                  />
-                );
+                    case "sectionTestimonials":
+                      return (
+                        <Testimonials
+                          heading={block.testimonialsSectionTitle}
+                          subheading={block.testimonialsSectionSubtitle}
+                          subtext={block.testimonialsSubtext}
+                          settings={block.testimonialsSettings}
+                          testimonialOverrides={(block.testimonialsList || []).map((t: any) => ({
+                            id: t._key,
+                            name: t.name,
+                            role: t.role,
+                            text: t.quote,
+                          }))}
+                        />
+                      );
 
-              case "sectionContact":
-                return (
-                  <Contact 
-                    key={key}
-                    heading={block.contactSectionTitle || "SAY HELLO."} 
-                    cta={block.contactSubmitButton || "TRANSMIT PAYLOAD"} 
-                    settings={block.contactSettings || {}} 
-                  />
-                );
+                    case "sectionContact":
+                      return (
+                        <Contact 
+                          heading={block.contactSectionTitle} 
+                          cta={block.contactSubmitButton} 
+                          settings={block.contactSettings} 
+                        />
+                      );
 
-              default:
-                return null;
-            }
+                    case "sectionSandbox":
+                      return <Sandbox elements={block.elements} settings={block.sandboxSettings} />;
+
+                    default:
+                      return null;
+                  }
+                })()}
+              </div>
+            );
           })}
         </div>
 

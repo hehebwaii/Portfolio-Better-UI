@@ -9,6 +9,7 @@ const sectionSettings = defineType({
   type: "object",
   options: { collapsible: true, collapsed: true },
   fields: [
+    defineField({ name: "sectionId", title: "Section ID (for Navbar anchors)", type: "string", description: "e.g. 'about', 'work', 'contact'. Leave blank if unneeded." }),
     defineField({ name: "customFont", title: "Custom Font", type: "string" }),
     defineField({ name: "fontSizeDesktop", title: "Heading Font Size (Desktop)", type: "string" }),
     defineField({ name: "fontSizeMobile", title: "Heading Font Size (Mobile)", type: "string" }),
@@ -24,7 +25,54 @@ const sectionSettings = defineType({
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STANDALONE SECTION OBJECTS
+// SANDBOX MICRO-SCHEMAS
+// ─────────────────────────────────────────────────────────────────────────────
+const sandboxTextBlock = defineType({
+  name: "sandboxTextBlock",
+  title: "Text Block",
+  type: "object",
+  fields: [
+    defineField({ name: "content", title: "Content", type: "text", rows: 3 }),
+  ],
+  preview: { select: { title: "content" }, prepare({ title }) { return { title: `Text: ${title ? title.substring(0, 20) : "Empty"}` } } }
+});
+
+const sandboxSingleMetric = defineType({
+  name: "sandboxSingleMetric",
+  title: "Single Metric",
+  type: "object",
+  fields: [
+    defineField({ name: "label", title: "Label", type: "string" }),
+    defineField({ name: "value", title: "Value", type: "string" }),
+  ],
+  preview: { select: { title: "label", subtitle: "value" } }
+});
+
+const sandboxMediaCard = defineType({
+  name: "sandboxMediaCard",
+  title: "Media Card",
+  type: "object",
+  fields: [
+    defineField({ name: "title", title: "Title", type: "string" }),
+    defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+  ],
+  preview: { select: { title: "title" } }
+});
+
+const sandboxProjectCard = defineType({
+  name: "sandboxProjectCard",
+  title: "Project Card",
+  type: "object",
+  fields: [
+    defineField({ name: "projectName", title: "Project Name", type: "string" }),
+    defineField({ name: "description", title: "Description", type: "text" }),
+    defineField({ name: "image", title: "Image", type: "image", options: { hotspot: true } }),
+  ],
+  preview: { select: { title: "projectName" } }
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STANDALONE SECTION OBJECTS (All Fields Optional)
 // ─────────────────────────────────────────────────────────────────────────────
 
 const sectionHero = defineType({
@@ -253,6 +301,27 @@ const sectionContact = defineType({
   preview: { select: { title: "contactSectionTitle" }, prepare(selection) { return { title: `Contact: ${selection.title || "Untitled"}` }; } },
 });
 
+const sectionSandbox = defineType({
+  name: "sectionSandbox",
+  title: "Sandbox Section",
+  type: "object",
+  fields: [
+    defineField({ name: "sandboxSettings", title: "Style Overrides", type: "sectionSettings" }),
+    defineField({
+      name: "elements",
+      title: "Sandbox Elements",
+      type: "array",
+      of: [
+        { type: "sandboxTextBlock" },
+        { type: "sandboxSingleMetric" },
+        { type: "sandboxMediaCard" },
+        { type: "sandboxProjectCard" },
+      ],
+    }),
+  ],
+  preview: { prepare() { return { title: `Sandbox` }; } },
+});
+
 // ─────────────────────────────────────────────────────────────────────────────
 // SINGLETON: portfolio document
 // ─────────────────────────────────────────────────────────────────────────────
@@ -275,6 +344,22 @@ const portfolio = defineType({
 
     // ── GLOBAL: NAVBAR & FOOTER ──────────────────────────────────────────────
     defineField({ name: "navbarBrandName", title: "Navbar Brand Name", type: "string", group: "global", initialValue: "niranjan.digital" }),
+    defineField({
+      name: "navItems",
+      title: "Navbar Links",
+      type: "array",
+      group: "global",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "label", title: "Label", type: "string" }),
+            defineField({ name: "targetId", title: "Target Section ID", type: "string" }),
+          ],
+        }),
+      ],
+    }),
+    defineField({ name: "resumeFile", title: "Resume (PDF)", type: "file", group: "global" }),
     defineField({ name: "navbarContactButton", title: "Navbar Contact Button Label", type: "string", group: "global", initialValue: "SAY HELLO" }),
     defineField({ name: "footerName", title: "Footer Name", type: "string", group: "global", initialValue: "NIRANJAN S S" }),
     defineField({ name: "footerVersionTag", title: "Footer Version Tag", type: "string", group: "global", initialValue: "SYS.VER: 14.0 // NEO-BRUTALIST POP" }),
@@ -296,6 +381,7 @@ const portfolio = defineType({
         { type: "sectionArchives" },
         { type: "sectionTestimonials" },
         { type: "sectionContact" },
+        { type: "sectionSandbox" },
       ],
     }),
   ],
@@ -303,6 +389,10 @@ const portfolio = defineType({
 
 export const portfolioSchema = [
   sectionSettings,
+  sandboxTextBlock,
+  sandboxSingleMetric,
+  sandboxMediaCard,
+  sandboxProjectCard,
   sectionHero,
   sectionSkills,
   sectionProjects,
@@ -312,5 +402,6 @@ export const portfolioSchema = [
   sectionArchives,
   sectionTestimonials,
   sectionContact,
+  sectionSandbox,
   portfolio,
 ];

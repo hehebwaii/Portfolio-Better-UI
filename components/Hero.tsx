@@ -26,23 +26,29 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
       <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
         <div className="relative z-10 flex w-full flex-col items-start justify-center">
-          <h1
-            style={{ fontSize: settings?.fontSizeDesktop || undefined }}
-            className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-neoblack uppercase mb-8"
-          >
-            {headline}
-          </h1>
+          {headline && (
+            <h1
+              style={{ fontSize: settings?.fontSizeDesktop || undefined }}
+              className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-neoblack uppercase mb-8"
+            >
+              {headline}
+            </h1>
+          )}
 
-          <p className="relative z-10 font-body text-xl font-medium text-neoblack/80 mb-12 max-w-xl">
-            {subtext}
-          </p>
+          {subtext && (
+            <p className="relative z-10 font-body text-xl font-medium text-neoblack/80 mb-12 max-w-xl">
+              {subtext}
+            </p>
+          )}
 
-          <a
-            href="#projects"
-            className="relative z-20 inline-block border-neo-black bg-neoyellow px-8 py-4 rounded-2xl font-display text-2xl font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
-          >
-            {cta}
-          </a>
+          {cta && (
+            <a
+              href="#projects"
+              className="relative z-20 inline-block border-neo-black bg-neoyellow px-8 py-4 rounded-2xl font-display text-2xl font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
+            >
+              {cta}
+            </a>
+          )}
         </div>
 
         <div className="relative z-10 flex w-full items-center justify-center h-[500px] lg:h-[600px]">
