@@ -34,6 +34,12 @@ const payload = {
 
   // ── GLOBAL ───────────────────────────────────────────────────────────────
   navbarBrandName: "niranjan.digital",
+  navItems: [
+    { _key: generateKey(), label: "SKILLS", targetId: "skills" },
+    { _key: generateKey(), label: "PROJECTS", targetId: "projects" },
+    { _key: generateKey(), label: "EXPERIENCE", targetId: "timeline" },
+    { _key: generateKey(), label: "TESTIMONIALS", targetId: "testimonials" },
+  ],
   navbarContactButton: "SAY HELLO",
   footerName: "NIRANJAN S S",
   footerVersionTag: "SYS.VER: 14.0 // NEO-BRUTALIST POP",
