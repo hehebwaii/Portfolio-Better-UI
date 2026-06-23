@@ -55,14 +55,14 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
           {headline && (
             <h1
               style={{ fontSize: settings?.fontSizeDesktop || undefined }}
-              className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-neoblack dark:text-white uppercase mb-8"
+              className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-[var(--text-primary)] uppercase mb-8"
             >
               {headline}
             </h1>
           )}
 
           {subtext && (
-            <p className="relative z-10 font-body text-xl font-medium text-neoblack/80 dark:text-white/80 mb-12 max-w-xl">
+            <p className="relative z-10 font-body text-xl font-medium text-[var(--text-primary)] opacity-80 mb-12 max-w-xl">
               {subtext}
             </p>
           )}

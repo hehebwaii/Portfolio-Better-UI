@@ -57,19 +57,18 @@ export default async function Home() {
   const globalCss = `
     :root {
       ${globalFont ? `--font-global: '${globalFont}', sans-serif;` : ""}
-      --color-bg-global: ${lightBg};
-      --color-text-global: ${lightText};
+      --bg-primary: ${lightBg};
+      --text-primary: ${lightText};
       --accent-1: ${accentPrimary};
-      --accent-2: ${accentSecondary};
     }
-    [data-theme='dark'] {
-      --color-bg-global: ${darkBg};
-      --color-text-global: ${darkText};
+    .dark {
+      --bg-primary: ${darkBg};
+      --text-primary: ${darkText};
     }
     body {
       font-family: var(--font-global);
-      background-color: var(--color-bg-global);
-      color: var(--color-text-global);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
       transition: background-color 0.3s ease, color 0.3s ease;
     }
   `;
