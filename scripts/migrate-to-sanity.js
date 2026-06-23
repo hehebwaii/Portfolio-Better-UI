@@ -27,12 +27,10 @@ const payload = {
 
   // ── THEME ────────────────────────────────────────────────────────────────
   globalFont: "Space Grotesk",
-  lightBg: "#FFF9F0",
-  lightText: "#000000",
-  darkBg: "#111111",
-  darkText: "#FFFFFF",
-  accentPrimary: "#FACC15",
-  accentSecondary: "#FF6B9E",
+  globalBgColor: "#FFF9F0",
+  globalTextColor: "#000000",
+  accentColorOne: "#FACC15",
+  accentColorTwo: "#FF6B9E",
 
   // ── GLOBAL ───────────────────────────────────────────────────────────────
   navbarBrandName: "niranjan.digital",
