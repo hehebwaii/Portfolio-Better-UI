@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Lenis from "@studio-freight/lenis";
 import { usePathname } from "next/navigation";
-import { ThemeProvider } from "next-themes";
+
 
 type EscContextType = {
   escPressed: boolean;

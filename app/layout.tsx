@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ClientProvider from "@/components/ClientProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -37,13 +36,11 @@ export default function RootLayout({
 }>) {
   // CRITICAL FIX: No overflow-hidden on html or body to allow position: sticky to function globally.
   return (
-    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} overflow-x-clip`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} overflow-x-clip`}>
       <body className="antialiased font-body bg-neocream text-neoblack overflow-x-clip">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <ClientProvider>
-            {children}
-          </ClientProvider>
-        </ThemeProvider>
+        <ClientProvider>
+          {children}
+        </ClientProvider>
       </body>
     </html>
   );

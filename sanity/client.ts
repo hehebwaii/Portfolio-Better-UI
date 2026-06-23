@@ -26,12 +26,10 @@ export function urlFor(source: SanityImageSource | null | undefined) {
 export const PORTFOLIO_QUERY = `
   *[_type == "portfolio"][0] {
     globalFont,
-    lightBg,
-    lightText,
-    darkBg,
-    darkText,
-    accentPrimary,
-    accentSecondary,
+    globalBgColor,
+    globalTextColor,
+    accentColorOne,
+    accentColorTwo,
     navbarBrandName,
     navItems,
     "resumeUrl": resumeFile.asset->url,

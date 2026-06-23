@@ -20,12 +20,8 @@ export default async function Home() {
 
   // ─── GLOBAL THEME ──────────────────────────────────────────────────────────
   const globalFont      = data?.globalFont      || "Space Grotesk";
-  const lightBg         = data?.lightBg         || "#FFF9F0";
-  const lightText       = data?.lightText       || "#000000";
-  const darkBg          = data?.darkBg          || "#111111";
-  const darkText        = data?.darkText        || "#FFFFFF";
-  const accentPrimary   = data?.accentPrimary   || "#FACC15";
-  const accentSecondary = data?.accentSecondary || "#FF6B9E";
+  const globalBgColor   = data?.globalBgColor   || "#FFF9F0";
+  const globalTextColor = data?.globalTextColor || "#000000";
 
   // ─── PAGE BUILDER BLOCKS ───────────────────────────────────────────────────
   const pageBuilder = data?.pageBuilder || [];
@@ -53,26 +49,6 @@ export default async function Home() {
     ? `https://fonts.googleapis.com/css2?${uniqueFonts.map(f => `family=${f.trim().replace(/ /g, "+")}:wght@400;700;900`).join("&")}&display=swap`
     : null;
 
-  // ─── GLOBAL CSS VARIABLES (DUAL-STATE) ──────────────────────────────────────
-  const globalCss = `
-    :root {
-      ${globalFont ? `--font-global: '${globalFont}', sans-serif;` : ""}
-      --bg-primary: ${lightBg};
-      --text-primary: ${lightText};
-      --accent-1: ${accentPrimary};
-    }
-    .dark {
-      --bg-primary: ${darkBg};
-      --text-primary: ${darkText};
-    }
-    body {
-      font-family: var(--font-global);
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-  `;
-
   // ─── NAVBAR & FOOTER ────────────────────────────────────────────────────────
   const navBrand   = data?.navbarBrandName     || "niranjan.digital";
   const navItems   = data?.navItems            || [];
@@ -87,9 +63,15 @@ export default async function Home() {
       {googleFontsUrl && <link rel="preconnect" href="https://fonts.googleapis.com" />}
       {googleFontsUrl && <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />}
       {googleFontsUrl && <link rel="stylesheet" href={googleFontsUrl} />}
-      {globalCss.trim() && <style dangerouslySetInnerHTML={{ __html: globalCss }} />}
 
-      <main className="relative w-full max-w-[100vw] min-h-screen bg-neocream overflow-x-clip scroll-smooth">
+      <main 
+        style={{ 
+          backgroundColor: globalBgColor, 
+          color: globalTextColor, 
+          fontFamily: `'${globalFont}', sans-serif`
+        }} 
+        className="relative w-full max-w-[100vw] min-h-screen overflow-x-clip scroll-smooth"
+      >
         <Navbar brand={navBrand} navItems={navItems} resumeUrl={resumeUrl} contactLabel={navContact} />
 
         <div className="w-full flex flex-col gap-16 md:gap-32 pb-32">
