@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Lenis from "@studio-freight/lenis";
 import { usePathname } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 
 type EscContextType = {
   escPressed: boolean;
@@ -69,8 +70,10 @@ export default function ClientProvider({ children }: { children: React.ReactNode
   const resetEsc = () => setEscPressed(false);
 
   return (
-    <EscContext.Provider value={{ escPressed, resetEsc }}>
-      {children}
-    </EscContext.Provider>
+    <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem={false}>
+      <EscContext.Provider value={{ escPressed, resetEsc }}>
+        {children}
+      </EscContext.Provider>
+    </ThemeProvider>
   );
 }

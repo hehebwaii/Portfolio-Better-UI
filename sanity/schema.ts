@@ -21,6 +21,13 @@ const sectionSettings = defineType({
       type: "string",
       options: { list: ["left", "center", "right"], layout: "radio", direction: "horizontal" },
     }),
+    defineField({
+      name: "entryAnimation",
+      title: "Entry Animation",
+      type: "string",
+      options: { list: ["fade-up", "brutalist-slam", "stagger"], layout: "radio", direction: "horizontal" },
+      initialValue: "fade-up",
+    }),
   ],
 });
 
@@ -337,10 +344,12 @@ const portfolio = defineType({
   fields: [
     // ── THEME ────────────────────────────────────────────────────────────────
     defineField({ name: "globalFont", title: "Global Font", type: "string", group: "theme", initialValue: "Space Grotesk" }),
-    defineField({ name: "globalBgColor", title: "Global Background Color", type: "string", group: "theme", initialValue: "#FFF9F0" }),
-    defineField({ name: "globalTextColor", title: "Global Text Color", type: "string", group: "theme", initialValue: "#000000" }),
-    defineField({ name: "accentColorOne", title: "Accent Color One", type: "string", group: "theme", initialValue: "#FACC15" }),
-    defineField({ name: "accentColorTwo", title: "Accent Color Two", type: "string", group: "theme", initialValue: "#FF6B9E" }),
+    defineField({ name: "lightBg", title: "Light Background Color", type: "string", group: "theme", initialValue: "#FFF9F0" }),
+    defineField({ name: "lightText", title: "Light Text Color", type: "string", group: "theme", initialValue: "#000000" }),
+    defineField({ name: "darkBg", title: "Dark Background Color", type: "string", group: "theme", initialValue: "#111111" }),
+    defineField({ name: "darkText", title: "Dark Text Color", type: "string", group: "theme", initialValue: "#FFFFFF" }),
+    defineField({ name: "accentPrimary", title: "Accent Primary", type: "string", group: "theme", initialValue: "#FACC15" }),
+    defineField({ name: "accentSecondary", title: "Accent Secondary", type: "string", group: "theme", initialValue: "#FF6B9E" }),
 
     // ── GLOBAL: NAVBAR & FOOTER ──────────────────────────────────────────────
     defineField({ name: "navbarBrandName", title: "Navbar Brand Name", type: "string", group: "global", initialValue: "niranjan.digital" }),

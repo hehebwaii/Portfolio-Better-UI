@@ -11,6 +11,7 @@ export interface SectionSettings {
   textColor?: string;         // hex e.g. "#FF0000"
   backgroundColor?: string;   // hex e.g. "#000000"
   alignment?: "left" | "center" | "right";
+  entryAnimation?: "fade-up" | "brutalist-slam" | "stagger";
 }
 
 /**

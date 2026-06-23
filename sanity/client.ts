@@ -26,10 +26,12 @@ export function urlFor(source: SanityImageSource | null | undefined) {
 export const PORTFOLIO_QUERY = `
   *[_type == "portfolio"][0] {
     globalFont,
-    globalBgColor,
-    globalTextColor,
-    accentColorOne,
-    accentColorTwo,
+    lightBg,
+    lightText,
+    darkBg,
+    darkText,
+    accentPrimary,
+    accentSecondary,
     navbarBrandName,
     navItems,
     "resumeUrl": resumeFile.asset->url,
@@ -38,7 +40,29 @@ export const PORTFOLIO_QUERY = `
     footerVersionTag,
     footerScrollingText,
     pageBuilder[] {
-      ...
+      ...,
+      _type == "sectionHero" => {
+        heroProfilePhoto { ..., asset->{ url, metadata { lqip } } }
+      },
+      _type == "sectionProjects" => {
+        projectsList[] {
+          ...,
+          screenshot { ..., asset->{ url, metadata { lqip } } }
+        }
+      },
+      _type == "sectionMedia" => {
+        mediaCards[] {
+          ...,
+          photo { ..., asset->{ url, metadata { lqip } } }
+        }
+      },
+      _type == "sectionSandbox" => {
+        elements[] {
+          ...,
+          _type == "sandboxMediaCard" => { image { ..., asset->{ url, metadata { lqip } } } },
+          _type == "sandboxProjectCard" => { image { ..., asset->{ url, metadata { lqip } } } }
+        }
+      }
     }
   }
 `;

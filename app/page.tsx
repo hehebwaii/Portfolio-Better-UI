@@ -20,10 +20,12 @@ export default async function Home() {
 
   // ─── GLOBAL THEME ──────────────────────────────────────────────────────────
   const globalFont      = data?.globalFont      || "Space Grotesk";
-  const globalBgColor   = data?.globalBgColor   || "";
-  const globalTextColor = data?.globalTextColor || "";
-  const accentColorOne  = data?.accentColorOne  || "#FACC15";
-  const accentColorTwo  = data?.accentColorTwo  || "#FF6B9E";
+  const lightBg         = data?.lightBg         || "#FFF9F0";
+  const lightText       = data?.lightText       || "#000000";
+  const darkBg          = data?.darkBg          || "#111111";
+  const darkText        = data?.darkText        || "#FFFFFF";
+  const accentPrimary   = data?.accentPrimary   || "#FACC15";
+  const accentSecondary = data?.accentSecondary || "#FF6B9E";
 
   // ─── PAGE BUILDER BLOCKS ───────────────────────────────────────────────────
   const pageBuilder = data?.pageBuilder || [];
@@ -51,19 +53,26 @@ export default async function Home() {
     ? `https://fonts.googleapis.com/css2?${uniqueFonts.map(f => `family=${f.trim().replace(/ /g, "+")}:wght@400;700;900`).join("&")}&display=swap`
     : null;
 
-  // ─── GLOBAL CSS VARIABLES ───────────────────────────────────────────────────
-  const globalCss = [
-    ":root {",
-    globalFont      ? `  --font-global: '${globalFont}', sans-serif;`    : "",
-    globalBgColor   ? `  --color-bg-global: ${globalBgColor};`           : "",
-    globalTextColor ? `  --color-text-global: ${globalTextColor};`       : "",
-    `  --accent-1: ${accentColorOne};`,
-    `  --accent-2: ${accentColorTwo};`,
-    "}",
-    globalFont      ? `body { font-family: var(--font-global); }`         : "",
-    globalBgColor   ? `body { background-color: var(--color-bg-global); }` : "",
-    globalTextColor ? `body { color: var(--color-text-global); }`         : "",
-  ].filter(Boolean).join("\n");
+  // ─── GLOBAL CSS VARIABLES (DUAL-STATE) ──────────────────────────────────────
+  const globalCss = `
+    :root {
+      ${globalFont ? `--font-global: '${globalFont}', sans-serif;` : ""}
+      --color-bg-global: ${lightBg};
+      --color-text-global: ${lightText};
+      --accent-1: ${accentPrimary};
+      --accent-2: ${accentSecondary};
+    }
+    [data-theme='dark'] {
+      --color-bg-global: ${darkBg};
+      --color-text-global: ${darkText};
+    }
+    body {
+      font-family: var(--font-global);
+      background-color: var(--color-bg-global);
+      color: var(--color-text-global);
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+  `;
 
   // ─── NAVBAR & FOOTER ────────────────────────────────────────────────────────
   const navBrand   = data?.navbarBrandName     || "niranjan.digital";
@@ -155,6 +164,7 @@ export default async function Home() {
                             desc: c.description,
                             tags: c.tags,
                             imageUrl: c.photo ? urlFor(c.photo).url() : "",
+                            lqip: c.photo?.asset?.metadata?.lqip || "",
                           }))}
                         />
                       );

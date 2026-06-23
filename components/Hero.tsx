@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import HeroCanvasWrapper from "./HeroCanvasWrapper";
 import { buildSectionStyle } from "@/types/cms";
@@ -16,27 +16,53 @@ interface HeroProps {
 
 export default function Hero({ headline, subtext, cta, photoUrl, settings }: HeroProps) {
   const sectionStyle = buildSectionStyle(settings);
+  
+  const animType = settings?.entryAnimation || "fade-up";
+  
+  const variants = {
+    hidden: { 
+      opacity: 0, 
+      y: animType === "fade-up" ? 50 : 0, 
+      scale: animType === "brutalist-slam" ? 1.5 : 1 
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { 
+        type: animType === "brutalist-slam" ? "spring" : "tween",
+        stiffness: 200, 
+        damping: 15,
+        duration: animType === "fade-up" ? 0.8 : undefined 
+      }
+    }
+  };
 
   return (
     <section
       id="hero"
       style={sectionStyle}
-      className="relative flex min-h-screen w-full items-center justify-center bg-neocream px-6 pt-32 pb-16 lg:py-0"
+      className="relative flex min-h-screen w-full items-center justify-center bg-transparent px-6 pt-32 pb-16 lg:py-0"
     >
-      <div className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        variants={variants}
+        className="w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center"
+      >
         <div className="relative z-10 flex w-full flex-col items-start justify-center">
           {headline && (
             <h1
               style={{ fontSize: settings?.fontSizeDesktop || undefined }}
-              className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-neoblack uppercase mb-8"
+              className="relative z-10 font-display text-[clamp(3.5rem,6vw,7.5rem)] font-black leading-none tracking-tighter text-neoblack dark:text-white uppercase mb-8"
             >
               {headline}
             </h1>
           )}
 
           {subtext && (
-            <p className="relative z-10 font-body text-xl font-medium text-neoblack/80 mb-12 max-w-xl">
+            <p className="relative z-10 font-body text-xl font-medium text-neoblack/80 dark:text-white/80 mb-12 max-w-xl">
               {subtext}
             </p>
           )}
@@ -44,7 +70,7 @@ export default function Hero({ headline, subtext, cta, photoUrl, settings }: Her
           {cta && (
             <a
               href="#projects"
-              className="relative z-20 inline-block border-neo-black bg-neoyellow px-8 py-4 rounded-2xl font-display text-2xl font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FFF9F0]"
+              className="relative z-20 inline-block border-neo-black bg-neoyellow px-8 py-4 rounded-2xl font-display text-2xl font-black text-neoblack uppercase active-neo-press shadow-neo-black cursor-pointer outline-none focus-visible:ring-4 focus-visible:ring-[#FF6B9E] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             >
               {cta}
             </a>
